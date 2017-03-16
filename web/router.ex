@@ -11,6 +11,8 @@ defmodule TRexRestPhoenix.Router do
     pipe_through :api
       resources "/accounts", AccountController
       options "/accounts", AccountController, :options
+
+      post "/login", AccountController, :login
   end
 
   # Other scopes may use custom stacks.

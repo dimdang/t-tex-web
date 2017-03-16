@@ -14,6 +14,27 @@ defmodule TRexRestPhoenix.AccountController do
     render(conn, "index.json", accounts: accounts)
   end
 
+  # user login
+  def login(conn, %{"account" => account_params})do
+    changeset = Account.changeset(%Account{}, account_params)
+
+    account = Repo.get_by(Account, email: changeset.params["email"])
+
+    case authenticate(account, changeset.params["password"]) do
+      true -> {:ok, account}
+
+        _  -> {:error, changeset}
+        end
+  end
+
+  # verify password
+  defp authenticate(account, password) do
+    case account do
+      nil -> false
+      _   -> checkpw(password, account.password)
+    end
+  end
+
   def create(conn, %{"account" => account_params}) do
     changeset = Account.changeset(%Account{}, account_params)
 

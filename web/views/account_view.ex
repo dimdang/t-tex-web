@@ -12,8 +12,8 @@ defmodule TRexRestPhoenix.AccountView do
   def render("account.json", %{account: account}) do
     %{id: account.id,
       email: account.email,
-      password: account.password,
       role: account.role,
-      status: account.status}
+      status: account.status,
+      inserted_at: account.inserted_at}
   end
 end

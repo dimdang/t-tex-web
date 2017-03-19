@@ -9,10 +9,42 @@ defmodule TRexRestPhoenix.Router do
 
   scope "/api/v1", TRexRestPhoenix do
     pipe_through :api
+
+      # account route
       resources "/accounts", AccountController
       options "/accounts", AccountController, :options
 
+      # login route
       post "/login", AccountController, :login
+      options "/login", AccountController, :options
+
+      # catetory route
+      resources "/categories", CategoryController
+      options "/categories", CategoryController, :options
+
+      # author route
+      resources "/authors", AuthorController
+      options "/authors", AuthorController, :options
+
+      #user profile route
+      resources "/user_profile", UserProfileController
+      options "/user_profile", UserProfileController, :options
+
+      #book route
+      resources "/books", BookController
+      options "/books", BookController, :options
+
+      #carts route
+      resources "/carts", CartController
+      options "/carts", CartController, :options
+
+      #checkout route
+      resources "/checkouts", CheckoutController
+      options "/checkouts", CheckoutController, :options
+
+      #checkout detail
+      resources "/checkout_detail", CheckoutDetailController
+      options "/checkout_detail", CheckoutDetailController, :options
   end
 
   # Other scopes may use custom stacks.

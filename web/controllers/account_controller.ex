@@ -6,11 +6,13 @@ defmodule TRexRestPhoenix.AccountController do
   alias TRexRestPhoenix.Account
 
   def index(conn, params) do
+
     {query, _rummage} = Account
       |> Account.rummage(params["page"])
 
     accounts = query
       |> Repo.all
+
     render(conn, "index.json", accounts: accounts)
   end
 
@@ -21,9 +23,17 @@ defmodule TRexRestPhoenix.AccountController do
     account = Repo.get_by(Account, email: changeset.params["email"])
 
     case authenticate(account, changeset.params["password"]) do
-      true -> {:ok, account}
+      true -> json conn,%{data: %{
+                            status: 200,
+                            message: "login success",
+                            token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk="
+                          }}
 
-        _  -> {:error, changeset}
+        _  -> json conn, %{data: %{
+                            status: 404,
+                            message: "Password or email didn't match",
+                            token: ""
+                          }}
         end
   end
 

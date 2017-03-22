@@ -14,6 +14,7 @@ defmodule TRexRestPhoenix.AuthorView do
       firstname: author.firstname,
       lastname: author.lastname,
       description: author.description,
+      photo: author.photo,
       status: author.status}
   end
 end

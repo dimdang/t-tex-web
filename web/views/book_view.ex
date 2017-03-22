@@ -22,6 +22,7 @@ defmodule TRexRestPhoenix.BookView do
       shipping_weight: book.shipping_weight,
       book_dimensions: book.book_dimensions,
       status: book.status,
+      image: book.image,
       category_id: book.category_id,
       author_id: book.author_id}
   end

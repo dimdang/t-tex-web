@@ -1,6 +1,5 @@
 defmodule TRexRestPhoenix.Book do
   use TRexRestPhoenix.Web, :model
-  use Rummage.Ecto
 
   schema "books" do
     field :title, :string
@@ -14,6 +13,7 @@ defmodule TRexRestPhoenix.Book do
     field :shipping_weight, :float
     field :book_dimensions, :string
     field :status, :integer
+    field :image, :string
     field :category_id, :integer
     field :author_id, :integer
 
@@ -25,31 +25,7 @@ defmodule TRexRestPhoenix.Book do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [ :title,
-                      :isbn,
-                      :price,
-                      :unit,
-                      :publisher_name,
-                      :published_year,
-                      :page_count,
-                      :language,
-                      :shipping_weight,
-                      :book_dimensions,
-                      :status,
-                      :category_id,
-                      :author_id])
-    |> validate_required([  :title,
-                            :isbn,
-                            :price,
-                            :unit,
-                            :publisher_name,
-                            :published_year,
-                            :page_count,
-                            :language,
-                            :shipping_weight,
-                            :book_dimensions,
-                            :status,
-                            :category_id,
-                            :author_id])
+    |> cast(params, [:title, :isbn, :price, :unit, :publisher_name, :published_year, :page_count, :language, :shipping_weight, :book_dimensions, :status, :image, :category_id, :author_id])
+    |> validate_required([:title, :isbn, :price, :unit, :publisher_name, :published_year, :page_count, :language, :shipping_weight, :book_dimensions, :status, :image, :category_id, :author_id])
   end
 end

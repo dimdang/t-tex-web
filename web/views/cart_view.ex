@@ -17,4 +17,14 @@ defmodule TRexRestPhoenix.CartView do
       account_id: cart.account_id,
       book_id: cart.book_id}
   end
+
+  def render("book_in_cart.json", assigns) do
+    %{data:
+        %{
+          books: assigns.books
+        },
+      status: 200,
+      message: "data found!"
+    }
+  end
 end

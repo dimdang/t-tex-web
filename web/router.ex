@@ -38,6 +38,12 @@ defmodule TRexRestPhoenix.Router do
       resources "/carts", CartController
       options "/carts", CartController, :options
 
+      get "/carts/user/:id", CartController, :showBookInCart
+      options "/carts/user/:id", CartController, :options
+
+      delete "/carts/user/:id/book/:book_id", CartController, :deleteBookFromCart
+      options "/carts/user/:id/book/:book_id", CartController,  :options
+
       #checkout route
       resources "/checkouts", CheckoutController
       options "/checkouts", CheckoutController, :options

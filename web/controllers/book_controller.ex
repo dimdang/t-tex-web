@@ -3,7 +3,7 @@ defmodule TRexRestPhoenix.BookController do
 
   alias TRexRestPhoenix.Book
 
-  def index(conn, params) do
+  def index(conn, _params) do
     books = Repo.all(Book)
     render(conn, "index.json", books: books)
   end

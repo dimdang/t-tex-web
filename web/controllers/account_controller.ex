@@ -4,6 +4,7 @@ defmodule TRexRestPhoenix.AccountController do
   import Ecto.Changeset
 
   alias TRexRestPhoenix.Account
+  alias TRexRestPhoenix.UserProfile
 
   def index(conn, params) do
 
@@ -22,10 +23,17 @@ defmodule TRexRestPhoenix.AccountController do
 
     account = Repo.get_by(Account, email: changeset.params["email"])
 
+    profile = Repo.get_by(UserProfile, account_id: account.id)
+
     case authenticate(account, changeset.params["password"]) do
       true -> json conn,%{data: %{
                             status: 200,
                             message: "login success",
+                            firstname: profile.firstname,
+                            lastname: profile.lastname,
+                            id: account.id,
+                            email: account.email,
+                            role: account.role,
                             token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk="
                           }}
 
@@ -48,19 +56,30 @@ defmodule TRexRestPhoenix.AccountController do
   def create(conn, %{"account" => account_params}) do
     changeset = Account.changeset(%Account{}, account_params)
 
-    data = changeset
-      |> put_change(:password, hashpwsalt(changeset.params["password"]))
+    account = Repo.get_by(Account, email: changeset.params["email"])
 
-      case Repo.insert(data) do
-      {:ok, account} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", account_path(conn, :show, account))
-        |> render("show.json", account: account)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    case account do
+      nil ->
+        data = changeset
+        |> put_change(:password, hashpwsalt(changeset.params["password"]))
+
+        case Repo.insert(data) do
+        {:ok, account} ->
+          conn
+          |> put_status(:created)
+          |> put_resp_header("location", account_path(conn, :show, account))
+          |> render("show.json", account: account)
+        {:error, changeset} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      end
+      _ ->
+        json conn , %{ data: %{
+                            message: "Your email already register with our system",
+                            status: 400
+          }
+        }
     end
   end
 

@@ -41,7 +41,9 @@ defmodule TRexRestPhoenix.Mixfile do
      {:cors_plug, "~> 1.2"},
      {:basic_auth, "~> 2.0.0"},
      {:rummage_ecto, "~> 1.0.0"},
-     {:comeonin, "~> 3.0"}]
+     {:comeonin, "~> 3.0"},
+     {:poison, "~> 3.0", override: true},
+     {:stripity_stripe, "~> 1.4.0"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

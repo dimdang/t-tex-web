@@ -10,31 +10,27 @@ defmodule TRexRestPhoenix.CheckoutView do
   end
 
   def render("checkout.json", %{checkout: checkout}) do
-    %{
-      id: checkout.id,
+    %{id: checkout.id,
       account_id: checkout.account_id,
-      inserted_at: checkout.inserted_at
-    }
+      status: checkout.status}
   end
 
   def render("detail.json", assigns) do
-    %{data:
-        %{
-            date: assigns.checkout.inserted_at,
-            profile:  %{
-                          status: assigns.profile.status,
-                          photo:  assigns.profile.status,
-                          lastname: assigns.profile.lastname,
-                          firstname: assigns.profile.firstname,
-                          address: assigns.profile.address,
-                          id: assigns.profile.account_id,
-                          email: assigns.account.email
-                        },
-            books: assigns.books,
-            status:   200,
-            message:  "data found!"
-          }
+    %{
+      data: %{
+        date: assigns.checkout.inserted_at,
+        status: assigns.checkout.status,
+        profile: %{
+          firstname: assigns.profile.firstname,
+          lastname: assigns.profile.lastname,
+          address: assigns.profile.address,
+          photo: assigns.profile.photo,
+          id: assigns.profile.account_id,
+          phone: assigns.profile.phone,
+          email: assigns.account.email
+        },
+        books: assigns.books 
       }
+    }
   end
-
 end

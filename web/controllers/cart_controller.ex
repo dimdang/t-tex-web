@@ -81,7 +81,8 @@ defmodule TRexRestPhoenix.CartController do
         page_count: book.page_count,
         language: book.language,
         isbn: book.isbn,
-        image: book.image
+        image: book.image,
+        cart_id: c.id
       }
     end
   end
@@ -105,9 +106,10 @@ defmodule TRexRestPhoenix.CartController do
     end
   end
 
-  def deleteBookFromCart(conn, %{"id" => id, "book_id" => book_id}) do
-    cart = Repo.all(from cart in Cart, where: cart.account_id == ^id and cart.book_id == ^book_id)
-    book = Repo.get_by(Book, id: book_id)
+  def delete(conn, %{"id" => id}) do
+    cart = Repo.get!(Cart, id)
+
+    book = Repo.get_by(Book, id: cart.book_id)
 
     newBooks = %{
         title: book.title,
@@ -135,13 +137,5 @@ defmodule TRexRestPhoenix.CartController do
                   status: 200,
                 }
               }
-  end
-
-  def delete(conn, %{"id" => id}) do
-    cart = Repo.get!(Cart, id)
-
-    Repo.delete!(cart)
-
-    send_resp(conn, :no_content, "")
   end
 end

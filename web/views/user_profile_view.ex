@@ -16,6 +16,7 @@ defmodule TRexRestPhoenix.UserProfileView do
       address: user_profile.address,
       photo: user_profile.photo,
       status: user_profile.status,
+      phone: user_profile.phone,
       account_id: user_profile.account_id}
   end
 end

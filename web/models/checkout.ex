@@ -1,9 +1,9 @@
 defmodule TRexRestPhoenix.Checkout do
   use TRexRestPhoenix.Web, :model
-  use Rummage.Ecto
 
   schema "checkouts" do
     field :account_id, :integer
+    field :status, :integer
 
     timestamps()
   end
@@ -13,7 +13,7 @@ defmodule TRexRestPhoenix.Checkout do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:account_id])
-    |> validate_required([:account_id])
+    |> cast(params, [:account_id, :status])
+    |> validate_required([:account_id, :status])
   end
 end

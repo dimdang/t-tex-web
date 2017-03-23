@@ -1,6 +1,5 @@
 defmodule TRexRestPhoenix.UserProfile do
   use TRexRestPhoenix.Web, :model
-  use Rummage.Ecto
 
   schema "user_profile" do
     field :firstname, :string
@@ -8,6 +7,7 @@ defmodule TRexRestPhoenix.UserProfile do
     field :address, :string
     field :photo, :string
     field :status, :boolean, default: false
+    field :phone, :string
     field :account_id, :integer
 
     timestamps()
@@ -18,7 +18,7 @@ defmodule TRexRestPhoenix.UserProfile do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:firstname, :lastname, :address, :photo, :status, :account_id])
-    |> validate_required([:firstname, :lastname, :address, :photo, :status, :account_id])
+    |> cast(params, [:firstname, :lastname, :address, :photo, :status, :phone, :account_id])
+    |> validate_required([:firstname, :lastname, :address, :photo, :status, :phone, :account_id])
   end
 end

@@ -6,6 +6,7 @@ defmodule TRexRestPhoenix.CheckoutController do
   alias TRexRestPhoenix.UserProfile
   alias TRexRestPhoenix.CheckoutDetail
   alias TRexRestPhoenix.Book
+  alias TRexRestPhoenix.Cart
 
   def index(conn, _params) do
     checkouts = Repo.all(Checkout)
@@ -17,14 +18,31 @@ defmodule TRexRestPhoenix.CheckoutController do
 
     case Repo.insert(changeset) do
       {:ok, checkout} ->
+        saveCheckoutDetail(checkout)
         conn
         |> put_status(:created)
         |> put_resp_header("location", checkout_path(conn, :show, checkout))
         |> render("show.json", checkout: checkout)
+
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
         |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    end
+  end
+
+  defp saveCheckoutDetail(checkout) do
+    cart = Repo.all(from c in Cart, where: c.account_id == ^checkout.account_id)
+    for c <- cart do
+      checkoutDetail = %{
+        unit: c.unit,
+        price: c.price,
+        checkout_id: checkout.id,
+        book_id: c.book_id
+      }
+
+      Repo.insert(CheckoutDetail.changeset(%CheckoutDetail{}, checkoutDetail))
+      Repo.delete!(c)
     end
   end
 

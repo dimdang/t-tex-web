@@ -13,6 +13,7 @@ defmodule TRexRestPhoenix.Router do
       # account route
       resources "/accounts", AccountController
       options "/accounts", AccountController, :options
+      options "/accounts/:id", AccountController, :options
 
       # login route
       post "/login", AccountController, :login
@@ -21,22 +22,27 @@ defmodule TRexRestPhoenix.Router do
       # catetory route
       resources "/categories", CategoryController
       options "/categories", CategoryController, :options
+      options "/categories/:id", CategoryController, :options
 
       # author route
       resources "/authors", AuthorController
       options "/authors", AuthorController, :options
+      options "/authors/:id", AuthorController, :options
 
       #user profile route
       resources "/user_profile", UserProfileController
       options "/user_profile", UserProfileController, :options
+      options "/user_profile/:id", UserProfileController, :options
 
       #book route
       resources "/books", BookController
       options "/books", BookController, :options
+      options "/books/:id", BookController, :options
 
       #carts route
       resources "/carts", CartController
       options "/carts", CartController, :options
+      options "/carts/:id", CartController, :options
 
       get "/carts/user/:id", CartController, :showBookInCart
       options "/carts/user/:id", CartController, :options
@@ -44,6 +50,9 @@ defmodule TRexRestPhoenix.Router do
       #checkout route
       resources "/checkouts", CheckoutController
       options "/checkouts", CheckoutController, :options
+
+      post "/payment", CheckoutController, :payment
+      options "/payment", CheckoutController, :options
 
       #checkout detail
       resources "/checkout_detail", CheckoutDetailController

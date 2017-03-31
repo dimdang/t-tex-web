@@ -8,21 +8,41 @@ defmodule TRexRestPhoenix.UserProfileController do
     render(conn, "index.json", user_profile: user_profile)
   end
 
-  def create(conn, %{"user_profile" => user_profile_params}) do
-    changeset = UserProfile.changeset(%UserProfile{}, user_profile_params)
+  def create(conn, %{"firstname" => firstname, "lastname" => lastname, "address" => address, "photo" => photo, "phone" => phone, "account_id" => account_id}) do
+     if photo.filename === nil do
+       json conn, %{data: %{
+                      status: 404,
+                      message: "please check you image"
+         }}
+     else
+       extension = Path.extname(photo.filename)
+       filename = "#{UUID.uuid1()}#{extension}"
+       File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+       profile = %{
+           firstname: firstname,
+           lastname: lastname,
+           address: address,
+           photo: filename,
+           status: true,
+           phone: phone,
+           account_id: account_id
+       }
 
-    case Repo.insert(changeset) do
-      {:ok, user_profile} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", user_profile_path(conn, :show, user_profile))
-        |> render("show.json", user_profile: user_profile)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
-    end
-  end
+       changeset = UserProfile.changeset(%UserProfile{}, profile)
+
+       case Repo.insert(changeset) do
+         {:ok, profile} ->
+           conn
+           |> put_status(:created)
+           |> put_resp_header("location", user_profile_path(conn, :show, profile))
+           |> render("show.json", user_profile: profile)
+         {:error, changeset} ->
+           conn
+           |> put_status(:unprocessable_entity)
+           |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+       end
+     end
+   end
 
   def show(conn, %{"id" => id}) do
     user_profile = Repo.get!(UserProfile, id)

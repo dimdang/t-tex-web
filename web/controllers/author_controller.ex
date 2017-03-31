@@ -8,19 +8,38 @@ defmodule TRexRestPhoenix.AuthorController do
     render(conn, "index.json", authors: authors)
   end
 
-  def create(conn, %{"author" => author_params}) do
-    changeset = Author.changeset(%Author{}, author_params)
+  def create(conn, %{"firstname" => firstname, "lastname" => lastname, "description" => decription, "photo" => photo}) do
 
-    case Repo.insert(changeset) do
-      {:ok, author} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", author_path(conn, :show, author))
-        |> render("show.json", author: author)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    if photo.filename === nil do
+      json conn, %{data: %{
+                     status: 404,
+                     message: "please check you image"
+        }}
+    else
+      extension = Path.extname(photo.filename)
+      filename = "#{UUID.uuid1()}#{extension}"
+      File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+
+      author = %{
+        firstname: firstname,
+        lastname: lastname,
+        description: decription,
+        photo: filename,
+        status: true
+      }
+      changeset = Author.changeset(%Author{}, author)
+
+      case Repo.insert(changeset) do
+        {:ok, author} ->
+          conn
+          |> put_status(:created)
+          |> put_resp_header("location", author_path(conn, :show, author))
+          |> render("show.json", author: author)
+        {:error, changeset} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      end
     end
   end
 

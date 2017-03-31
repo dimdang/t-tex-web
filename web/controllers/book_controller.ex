@@ -8,19 +8,61 @@ defmodule TRexRestPhoenix.BookController do
     render(conn, "index.json", books: books)
   end
 
-  def create(conn, %{"book" => book_params}) do
-    changeset = Book.changeset(%Book{}, book_params)
+  def create(conn, %{"title" => title,
+                     "isbn" => isbn,
+                     "price" => price,
+                     "unit" => unit,
+                     "publisher_name" => publisher,
+                     "published_year" => published,
+                     "page_count" => page,
+                     "language" => language,
+                     "shipping_weight" => shipping,
+                     "book_dimensions" => bookDm,
+                     "photo" => photo,
+                     "category_id" => category,
+                     "author_id" => author}) do
 
-    case Repo.insert(changeset) do
-      {:ok, book} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", book_path(conn, :show, book))
-        |> render("show.json", book: book)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    if photo.filename === nil do
+      json conn, %{data: %{
+          status: 404,
+          message: "please check you image"
+      }}
+    else
+      extension = Path.extname(photo.filename)
+      filename = "#{UUID.uuid1()}#{extension}"
+      File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+
+      book = %{
+        title: title,
+        isbn: isbn,
+        price: price,
+        unit: unit,
+        publisher_name: publisher,
+        published_year: published,
+        page_count: page,
+        language: language,
+        shipping_weight: shipping,
+        book_dimensions: bookDm,
+        status: true,
+        image: filename,
+        category_id: category,
+        author_id: author
+      }
+
+      changeset = Book.changeset(%Book{}, book)
+
+      case Repo.insert(changeset) do
+        {:ok, book} ->
+          conn
+          |> put_status(:created)
+          |> put_resp_header("location", book_path(conn, :show, book))
+          |> render("show.json", book: book)
+        {:error, changeset} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      end
+
     end
   end
 

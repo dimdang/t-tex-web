@@ -1,6 +1,5 @@
 defmodule TRexRestPhoenix.Account do
   use TRexRestPhoenix.Web, :model
-  use Rummage.Ecto
 
   schema "accounts" do
     field :email, :string

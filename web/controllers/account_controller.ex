@@ -6,13 +6,9 @@ defmodule TRexRestPhoenix.AccountController do
   alias TRexRestPhoenix.Account
   alias TRexRestPhoenix.UserProfile
 
-  def index(conn, params) do
+  def index(conn, _params) do
 
-    {query, _rummage} = Account
-      |> Account.rummage(params["page"])
-
-    accounts = query
-      |> Repo.all
+    accounts = Repo.all(Account)
 
     render(conn, "index.json", accounts: accounts)
   end
@@ -26,16 +22,29 @@ defmodule TRexRestPhoenix.AccountController do
     profile = Repo.get_by(UserProfile, account_id: account.id)
 
     case authenticate(account, changeset.params["password"]) do
-      true -> json conn,%{data: %{
-                            status: 200,
-                            message: "login success",
-                            firstname: profile.firstname,
-                            lastname: profile.lastname,
-                            id: account.id,
-                            email: account.email,
-                            role: account.role,
-                            token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk="
-                          }}
+      true ->
+        case profile do
+          nil -> json conn, %{data: %{
+                                  status: 200,
+                                  message: "login success",
+                                  token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
+                                  id: account.id,
+                                  email: account.email,
+                                  role: account.role,
+                                  isprofile: 0
+            }}
+            _ -> json conn,%{data: %{
+                                  status: 200,
+                                  message: "login success",
+                                  firstname: profile.firstname,
+                                  lastname: profile.lastname,
+                                  id: account.id,
+                                  email: account.email,
+                                  role: account.role,
+                                  token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
+                                  isprofile: 1
+                                }}
+        end
 
         _  -> json conn, %{data: %{
                             status: 404,

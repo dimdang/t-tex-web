@@ -31,6 +31,35 @@ defmodule TRexRestPhoenix.CheckoutController do
     end
   end
 
+  def payment(conn, %{"payment" => payment_params}) do
+
+    name = Map.get(payment_params, "name")
+    number = Map.get(payment_params, "number")
+    exp_month = Map.get(payment_params, "exp_month")
+    exp_year = Map.get(payment_params, "exp_year")
+    cvc = Map.get(payment_params, "cvc")
+    amount = Map.get(payment_params, "amount")
+
+    params = [
+      source: [
+        object: "card",
+        #4111111111111111
+        number: number,
+        #10
+        exp_month: exp_month,
+        #2020
+        exp_year: exp_year,
+        name: name,
+        cvc: cvc
+      ]
+    ]
+
+    {:ok, charge} = Stripe.Charges.create(amount, params)
+
+    json conn , %{data: charge}
+
+  end
+
   defp saveCheckoutDetail(checkout) do
     cart = Repo.all(from c in Cart, where: c.account_id == ^checkout.account_id)
     for c <- cart do

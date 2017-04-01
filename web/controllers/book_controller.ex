@@ -43,7 +43,7 @@ defmodule TRexRestPhoenix.BookController do
         language: language,
         shipping_weight: shipping,
         book_dimensions: bookDm,
-        status: true,
+        status: 1,
         image: filename,
         category_id: category,
         author_id: author
@@ -71,17 +71,61 @@ defmodule TRexRestPhoenix.BookController do
     render(conn, "show.json", book: book)
   end
 
-  def update(conn, %{"id" => id, "book" => book_params}) do
-    book = Repo.get!(Book, id)
-    changeset = Book.changeset(book, book_params)
+  def update(conn, %{"id" => id,
+                     "title" => title,
+                     "isbn" => isbn,
+                     "price" => price,
+                     "unit" => unit,
+                     "publisher_name" => publisher,
+                     "published_year" => published,
+                     "page_count" => page,
+                     "language" => language,
+                     "shipping_weight" => shipping,
+                     "book_dimensions" => bookDm,
+                     "photo" => photo,
+                     "category_id" => category,
+                     "author_id" => author
+                     }) do
 
-    case Repo.update(changeset) do
-      {:ok, book} ->
-        render(conn, "show.json", book: book)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    if photo.filename === nil do
+      json conn, %{data: %{
+                     status: 404,
+                     message: "please check your image"
+        }}
+    else
+      extension = Path.extname(photo.filename)
+      filename = "#{UUID.uuid1()}#{extension}"
+      File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+
+      newBook = %{
+        title: title,
+        isbn: isbn,
+        price: price,
+        unit: unit,
+        publisher_name: publisher,
+        published_year: published,
+        page_count: page,
+        language: language,
+        shipping_weight: shipping,
+        book_dimensions: bookDm,
+        status: 1,
+        image: filename,
+        category_id: category,
+        author_id: author
+      }
+
+      book = Repo.get!(Book, id)
+      changeset = Book.changeset(book, newBook)
+
+      case Repo.update(changeset) do
+        {:ok, book} ->
+          render(conn, "show.json", book: book)
+        {:error, changeset} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      end
+
     end
   end
 

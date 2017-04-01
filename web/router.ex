@@ -57,6 +57,10 @@ defmodule TRexRestPhoenix.Router do
       #checkout detail
       resources "/checkout_detail", CheckoutDetailController
       options "/checkout_detail", CheckoutDetailController, :options
+
+      #content who we are
+      resources "/who_we_are", WhoWeAreController
+      options "/who_we_are", WhoWeAreController, :options
   end
 
   # Other scopes may use custom stacks.

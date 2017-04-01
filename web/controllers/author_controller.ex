@@ -8,7 +8,10 @@ defmodule TRexRestPhoenix.AuthorController do
     render(conn, "index.json", authors: authors)
   end
 
-  def create(conn, %{"firstname" => firstname, "lastname" => lastname, "description" => decription, "photo" => photo}) do
+  def create(conn, %{"firstname" => firstname,
+                     "lastname" => lastname,
+                     "description" => decription,
+                     "photo" => photo}) do
 
     if photo.filename === nil do
       json conn, %{data: %{
@@ -48,17 +51,41 @@ defmodule TRexRestPhoenix.AuthorController do
     render(conn, "show.json", author: author)
   end
 
-  def update(conn, %{"id" => id, "author" => author_params}) do
-    author = Repo.get!(Author, id)
-    changeset = Author.changeset(author, author_params)
+  def update(conn, %{"id" => id,
+                     "firstname" => firstname,
+                     "lastname" => lastname,
+                     "description" => decription,
+                     "photo" => photo}) do
 
-    case Repo.update(changeset) do
-      {:ok, author} ->
-        render(conn, "show.json", author: author)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    if photo.filename === nil do
+      json conn, %{data: %{
+                     status: 404,
+                     message: "please check your image"
+        }}                        
+    else
+      extension = Path.extname(photo.filename)
+      filename = "#{UUID.uuid1()}#{extension}"
+      File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+
+      newAuthor = %{
+        firstname: firstname,
+        lastname: lastname,
+        description: decription,
+        photo: filename,
+        status: true
+      }
+
+      author = Repo.get!(Author, id)
+      changeset = Author.changeset(author, newAuthor)
+
+      case Repo.update(changeset) do
+        {:ok, author} ->
+          render(conn, "show.json", author: author)
+        {:error, changeset} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      end
     end
   end
 

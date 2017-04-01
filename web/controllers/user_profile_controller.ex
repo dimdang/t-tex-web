@@ -8,11 +8,16 @@ defmodule TRexRestPhoenix.UserProfileController do
     render(conn, "index.json", user_profile: user_profile)
   end
 
-  def create(conn, %{"firstname" => firstname, "lastname" => lastname, "address" => address, "photo" => photo, "phone" => phone, "account_id" => account_id}) do
+  def create(conn, %{"firstname" => firstname,
+                     "lastname" => lastname,
+                     "address" => address,
+                     "photo" => photo,
+                     "phone" => phone,
+                     "account_id" => account_id}) do
      if photo.filename === nil do
        json conn, %{data: %{
                       status: 404,
-                      message: "please check you image"
+                      message: "please check your image"
          }}
      else
        extension = Path.extname(photo.filename)
@@ -49,17 +54,45 @@ defmodule TRexRestPhoenix.UserProfileController do
     render(conn, "show.json", user_profile: user_profile)
   end
 
-  def update(conn, %{"id" => id, "user_profile" => user_profile_params}) do
-    user_profile = Repo.get!(UserProfile, id)
-    changeset = UserProfile.changeset(user_profile, user_profile_params)
+  def update(conn, %{"id" => id,
+                     "firstname" => firstname,
+                     "lastname" => lastname,
+                     "address" => address,
+                     "photo" => photo,
+                     "phone" => phone,
+                     "account_id" => account_id}) do
 
-    case Repo.update(changeset) do
-      {:ok, user_profile} ->
-        render(conn, "show.json", user_profile: user_profile)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    if photo.filename === nil do
+      json conn, %{data: %{
+                     status: 404,
+                     message: "please check your image"
+        }}
+    else
+      extension = Path.extname(photo.filename)
+      filename = "#{UUID.uuid1()}#{extension}"
+      File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+
+      profile = %{
+          firstname: firstname,
+          lastname: lastname,
+          address: address,
+          photo: filename,
+          status: true,
+          phone: phone,
+          account_id: account_id
+      }
+
+      user_profile = Repo.get!(UserProfile, id)
+      changeset = UserProfile.changeset(user_profile, profile)
+
+      case Repo.update(changeset) do
+        {:ok, user_profile} ->
+          render(conn, "show.json", user_profile: user_profile)
+        {:error, changeset} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      end
     end
   end
 

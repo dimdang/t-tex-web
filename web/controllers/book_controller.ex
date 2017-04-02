@@ -4,7 +4,7 @@ defmodule TRexRestPhoenix.BookController do
   alias TRexRestPhoenix.Book
 
   def index(conn, _params) do
-    books = Repo.all(Book)
+    books = Repo.all(from book in Book, where: book.status == 1)
     render(conn, "index.json", books: books)
   end
 
@@ -137,5 +137,30 @@ defmodule TRexRestPhoenix.BookController do
     Repo.delete!(book)
 
     send_resp(conn, :no_content, "")
+  end
+
+  def tmpDelete(conn, %{"id" => id}) do
+    book = Repo.get!(Book, id)
+
+    newBook = %{
+      title: book.title,
+      isbn: book.isbn,
+      price: book.price,
+      unit: book.unit,
+      publisher_name: book.publisher,
+      published_year: book.published,
+      page_count: book.page,
+      language: book.language,
+      shipping_weight: book.shipping,
+      book_dimensions: book.bookDm,
+      status: 0,
+      image: book.image,
+      category_id: book.category_id,
+      author_id: book.author_id
+    }
+
+    changeset = Book.changeset(book, newBook)
+
+    Repo.update(changeset)
   end
 end

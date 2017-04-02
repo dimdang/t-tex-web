@@ -4,7 +4,7 @@ defmodule TRexRestPhoenix.AuthorController do
   alias TRexRestPhoenix.Author
 
   def index(conn, _params) do
-    authors = Repo.all(Author)
+    authors = Repo.all(from author in Author, where: author.status == true)
     render(conn, "index.json", authors: authors)
   end
 
@@ -61,7 +61,7 @@ defmodule TRexRestPhoenix.AuthorController do
       json conn, %{data: %{
                      status: 404,
                      message: "please check your image"
-        }}                        
+        }}
     else
       extension = Path.extname(photo.filename)
       filename = "#{UUID.uuid1()}#{extension}"
@@ -97,5 +97,23 @@ defmodule TRexRestPhoenix.AuthorController do
     Repo.delete!(author)
 
     send_resp(conn, :no_content, "")
+  end
+
+  def tmpDelete(conn, %{"id" => id}) do
+    author = Repo.get!(Author, id)
+    newAuthor = %{
+      firstname: author.firstname,
+      lastname: author.lastname,
+      description: author.description,
+      photo: author.photo,
+      status: false
+    }
+    changeset = Author.changeset(author, newAuthor)
+
+    Repo.update(changeset)
+    json conn, %{data: %{
+                message: "delete author success!",
+                status: 200
+      }}
   end
 end

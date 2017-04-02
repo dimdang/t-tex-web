@@ -4,7 +4,7 @@ defmodule TRexRestPhoenix.CategoryController do
   alias TRexRestPhoenix.Category
 
   def index(conn, _params) do
-    categories = Repo.all(Category)
+    categories = Repo.all(from category in Category, where: category.status == true)
     render(conn, "index.json", categories: categories)
   end
 
@@ -51,5 +51,23 @@ defmodule TRexRestPhoenix.CategoryController do
     Repo.delete!(category)
 
     send_resp(conn, :no_content, "")
+  end
+
+  def tmpDelete(conn, %{"id" => id}) do
+    category = Repo.get!(Category, id)
+
+    newCategory = %{
+      name: category.name,
+      description: category.description,
+      status: false
+    }
+    changeset = Category.changeset(category, newCategory)
+
+    Repo.update(changeset)
+
+    json conn, %{data: %{
+        message: "category delete success!",
+        status: 200
+      }}
   end
 end

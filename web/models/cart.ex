@@ -1,6 +1,5 @@
 defmodule TRexRestPhoenix.Cart do
   use TRexRestPhoenix.Web, :model
-  use Rummage.Ecto
 
   schema "carts" do
     field :price, :float

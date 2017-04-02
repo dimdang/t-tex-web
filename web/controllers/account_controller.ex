@@ -8,7 +8,7 @@ defmodule TRexRestPhoenix.AccountController do
 
   def index(conn, _params) do
 
-    accounts = Repo.all(Account)
+    accounts = Repo.all(from account in Account, where: account.status == true)
 
     render(conn, "index.json", accounts: accounts)
   end
@@ -17,41 +17,49 @@ defmodule TRexRestPhoenix.AccountController do
   def login(conn, %{"account" => account_params})do
     changeset = Account.changeset(%Account{}, account_params)
 
-    account = Repo.get_by(Account, email: changeset.params["email"])
+    account = Repo.get_by(Account, email: changeset.params["email"], status: true)
 
-    profile = Repo.get_by(UserProfile, account_id: account.id)
+    if account === nil do
+      json conn, %{data: %{
+          status: 400,
+          message: "This account was disable. please register with other account"
+        }}
+    else
 
-    case authenticate(account, changeset.params["password"]) do
-      true ->
-        case profile do
-          nil -> json conn, %{data: %{
-                                  status: 200,
-                                  message: "login success",
-                                  token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
-                                  id: account.id,
-                                  email: account.email,
-                                  role: account.role,
-                                  isprofile: 0
-            }}
-            _ -> json conn,%{data: %{
-                                  status: 200,
-                                  message: "login success",
-                                  firstname: profile.firstname,
-                                  lastname: profile.lastname,
-                                  id: account.id,
-                                  email: account.email,
-                                  role: account.role,
-                                  token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
-                                  isprofile: 1
-                                }}
-        end
+      profile = Repo.get_by(UserProfile, account_id: account.id)
 
-        _  -> json conn, %{data: %{
-                            status: 404,
-                            message: "Password or email didn't match",
-                            token: ""
-                          }}
-        end
+      case authenticate(account, changeset.params["password"]) do
+        true ->
+          case profile do
+            nil -> json conn, %{data: %{
+                                    status: 200,
+                                    message: "login success",
+                                    token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
+                                    id: account.id,
+                                    email: account.email,
+                                    role: account.role,
+                                    isprofile: 0
+              }}
+              _ -> json conn,%{data: %{
+                                    status: 200,
+                                    message: "login success",
+                                    firstname: profile.firstname,
+                                    lastname: profile.lastname,
+                                    id: account.id,
+                                    email: account.email,
+                                    role: account.role,
+                                    token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
+                                    isprofile: 1
+                                  }}
+          end
+
+          _  -> json conn, %{data: %{
+                              status: 404,
+                              message: "Password or email didn't match",
+                              token: ""
+                            }}
+          end
+    end
   end
 
   # verify password

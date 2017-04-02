@@ -9,8 +9,40 @@ defmodule TRexRestPhoenix.CheckoutController do
   alias TRexRestPhoenix.Cart
 
   def index(conn, _params) do
-    checkouts = Repo.all(Checkout)
-    render(conn, "index.json", checkouts: checkouts)
+    checkouts = Repo.all(from checkout in Checkout, where: checkout.status != 0)
+    json conn, %{
+                  data: customIndex(checkouts)
+                }
+  end
+
+  defp customIndex(checkouts) do
+    for c <- checkouts do
+      profile = Repo.get_by(UserProfile, account_id: c.account_id)
+      account = Repo.get_by(Account, id: c.account_id)
+
+      case c.status do
+        1 -> customTemplateIndex(c,"will delivery",profile,account)
+        2 -> customTemplateIndex(c,"done",profile,account)
+      end
+    end
+  end
+
+  #custom template json for checkout
+  defp customTemplateIndex(c,status,profile,account) do
+    %{
+        id: c.id,
+        status: status,
+        date: c.inserted_at,
+        profile: %{
+          firstname: profile.firstname,
+          lastname: profile.lastname,
+          address: profile.address,
+          photo: profile.photo,
+          id: profile.account_id,
+          phone: profile.phone,
+          email: account.email
+        }
+    }
   end
 
   def create(conn, %{"checkout" => checkout_params}) do

@@ -5,7 +5,7 @@ defmodule TRexRestPhoenix.CartController do
   alias TRexRestPhoenix.Book
 
   def index(conn, _params) do
-    carts = Repo.all(Cart)
+    carts = Repo.all(from cart in Cart, where: cart.status == 1)
     render(conn, "index.json", carts: carts)
   end
 

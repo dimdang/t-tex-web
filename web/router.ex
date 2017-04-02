@@ -22,11 +22,13 @@ defmodule TRexRestPhoenix.Router do
       # catetory route
       resources "/categories", CategoryController
       options "/categories", CategoryController, :options
+      get "/category/:id", CategoryController, :tmpDelete
       options "/categories/:id", CategoryController, :options
 
       # author route
       resources "/authors", AuthorController
       options "/authors", AuthorController, :options
+      get "author/:id", AuthorController, :tmpDelete
       options "/authors/:id", AuthorController, :options
 
       #user profile route
@@ -37,6 +39,7 @@ defmodule TRexRestPhoenix.Router do
       #book route
       resources "/books", BookController
       options "/books", BookController, :options
+      get "/book/:id", BookController, :tmpDelete
       options "/books/:id", BookController, :options
 
       #carts route

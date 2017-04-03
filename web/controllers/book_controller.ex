@@ -2,6 +2,7 @@ defmodule TRexRestPhoenix.BookController do
   use TRexRestPhoenix.Web, :controller
 
   alias TRexRestPhoenix.Book
+  alias TRexRestPhoenix.Author
 
   def index(conn, _params) do
     books = Repo.all(from book in Book, where: book.status == 1)
@@ -19,6 +20,7 @@ defmodule TRexRestPhoenix.BookController do
                      "shipping_weight" => shipping,
                      "book_dimensions" => bookDm,
                      "photo" => photo,
+                     "description" => description,
                      "category_id" => category,
                      "author_id" => author}) do
 
@@ -32,6 +34,8 @@ defmodule TRexRestPhoenix.BookController do
       filename = "#{UUID.uuid1()}#{extension}"
       File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
 
+      author_param = Repo.get!(Author, author)
+
       book = %{
         title: title,
         isbn: isbn,
@@ -44,6 +48,8 @@ defmodule TRexRestPhoenix.BookController do
         shipping_weight: shipping,
         book_dimensions: bookDm,
         status: 1,
+        description: description,
+        author_name: Enum.join([author_param.firstname,author_param.lastname], " "),
         image: filename,
         category_id: category,
         author_id: author
@@ -62,7 +68,6 @@ defmodule TRexRestPhoenix.BookController do
           |> put_status(:unprocessable_entity)
           |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
       end
-
     end
   end
 
@@ -83,6 +88,7 @@ defmodule TRexRestPhoenix.BookController do
                      "shipping_weight" => shipping,
                      "book_dimensions" => bookDm,
                      "photo" => photo,
+                     "description" => description,
                      "category_id" => category,
                      "author_id" => author
                      }) do
@@ -97,6 +103,8 @@ defmodule TRexRestPhoenix.BookController do
       filename = "#{UUID.uuid1()}#{extension}"
       File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
 
+      author_param = Repo.get!(Author, author)
+
       newBook = %{
         title: title,
         isbn: isbn,
@@ -109,6 +117,8 @@ defmodule TRexRestPhoenix.BookController do
         shipping_weight: shipping,
         book_dimensions: bookDm,
         status: 1,
+        description: description,
+        author_name: Enum.join([author_param.firstname,author_param.lastname], " "),
         image: filename,
         category_id: category,
         author_id: author
@@ -147,13 +157,15 @@ defmodule TRexRestPhoenix.BookController do
       isbn: book.isbn,
       price: book.price,
       unit: book.unit,
-      publisher_name: book.publisher,
-      published_year: book.published,
-      page_count: book.page,
+      publisher_name: book.publisher_name,
+      published_year: book.published_year,
+      page_count: book.page_count,
       language: book.language,
-      shipping_weight: book.shipping,
-      book_dimensions: book.bookDm,
+      shipping_weight: book.shipping_weight,
+      book_dimensions: book.book_dimensions,
       status: 0,
+      description: book.description,
+      author_name: book.author_name,
       image: book.image,
       category_id: book.category_id,
       author_id: book.author_id
@@ -162,5 +174,9 @@ defmodule TRexRestPhoenix.BookController do
     changeset = Book.changeset(book, newBook)
 
     Repo.update(changeset)
+
+    json conn, %{data: %{message: "book has been delete",
+                         status: 200
+          }}
   end
 end

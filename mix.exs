@@ -19,7 +19,7 @@ defmodule TRexRestPhoenix.Mixfile do
   def application do
     [mod: {TRexRestPhoenix, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin]]
+                    :phoenix_ecto, :postgrex, :comeonin, :stripity_stripe]]
   end
 
   # Specifies which paths to compile per environment.
@@ -44,7 +44,6 @@ defmodule TRexRestPhoenix.Mixfile do
      {:comeonin, "~> 3.0"},
      {:poison, "~> 3.0", override: true},
      {:stripity_stripe, "~> 1.4.0"},
-     {:hackney, "~> 1.6", override: true},
      {:uuid, "~> 1.1"}]
   end
 

@@ -35,7 +35,7 @@ config :rummage_ecto, Rummage.Ecto,
   default_per_page: 10
 
 # Configure stripe
-config :stripity_stripe, secret_key: "sk_test_m3XmRyfJQW6qD6Tsm5CdNeQ5"
+config :stripity_stripe, secret_key: "sk_test_lJ4PttARweKfby0GMbXkHgDG"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

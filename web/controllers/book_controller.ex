@@ -135,7 +135,6 @@ defmodule TRexRestPhoenix.BookController do
           |> put_status(:unprocessable_entity)
           |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
       end
-
     end
   end
 

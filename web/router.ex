@@ -28,7 +28,7 @@ defmodule TRexRestPhoenix.Router do
       # author route
       resources "/authors", AuthorController
       options "/authors", AuthorController, :options
-      get "author/:id", AuthorController, :tmpDelete
+      get "/author/:id", AuthorController, :tmpDelete
       options "/authors/:id", AuthorController, :options
 
       #user profile route

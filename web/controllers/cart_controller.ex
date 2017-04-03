@@ -23,6 +23,8 @@ defmodule TRexRestPhoenix.CartController do
         }
       }
     else
+      cart = Repo.get_by(Cart, book_id: changeset.params["book_id"])
+
       #create new book struct to update
       newBooks = %{
           title: book.title,
@@ -40,20 +42,48 @@ defmodule TRexRestPhoenix.CartController do
           category_id: book.category_id,
           author_id: book.author_id
       }
-      #update unit in books
-      Repo.update(Book.changeset(book, newBooks))
 
-      #save book to cart
-      case Repo.insert(changeset) do
-        {:ok, cart} ->
-          conn
-          |> put_status(:created)
-          |> put_resp_header("location", cart_path(conn, :show, cart))
-          |> render("show.json", cart: cart)
-        {:error, changeset} ->
-          conn
-          |> put_status(:unprocessable_entity)
-          |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      case cart do
+        # new book at to cart
+        nil ->
+          #update unit in books
+          Repo.update(Book.changeset(book, newBooks))
+
+          #save book to cart
+          case Repo.insert(changeset) do
+            {:ok, cart} ->
+              conn
+              |> put_status(:created)
+              |> put_resp_header("location", cart_path(conn, :show, cart))
+              |> render("show.json", cart: cart)
+            {:error, changeset} ->
+              conn
+              |> put_status(:unprocessable_entity)
+              |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+          end
+        # old book in cart
+        _ ->
+          #update unit in books
+          Repo.update(Book.changeset(book, newBooks))
+
+          cart_params = %{
+            price: cart.price,
+            unit: (cart.unit + changeset.params["unit"]),
+            status: cart.status,
+            account_id: cart.account_id,
+            book_id: cart.book_id
+          }
+
+          newCart = Cart.changeset(cart, cart_params)
+
+          case Repo.update(newCart) do
+            {:ok, cart} ->
+              render(conn, "show.json", cart: cart)
+            {:error, changeset} ->
+              conn
+              |> put_status(:unprocessable_entity)
+              |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+          end
       end
     end
   end

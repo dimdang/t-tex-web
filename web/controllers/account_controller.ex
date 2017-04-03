@@ -32,33 +32,33 @@ defmodule TRexRestPhoenix.AccountController do
         true ->
           case profile do
             nil -> json conn, %{data: %{
-                                    status: 200,
-                                    message: "login success",
-                                    token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
-                                    id: account.id,
-                                    email: account.email,
-                                    role: account.role,
-                                    isprofile: 0
+                      status: 200,
+                      message: "login success",
+                      token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
+                      id: account.id,
+                      email: account.email,
+                      role: account.role,
+                      isprofile: 0
               }}
               _ -> json conn,%{data: %{
-                                    status: 200,
-                                    message: "login success",
-                                    firstname: profile.firstname,
-                                    lastname: profile.lastname,
-                                    id: account.id,
-                                    email: account.email,
-                                    role: account.role,
-                                    token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
-                                    isprofile: 1
-                                  }}
+                      status: 200,
+                      message: "login success",
+                      firstname: profile.firstname,
+                      lastname: profile.lastname,
+                      id: account.id,
+                      email: account.email,
+                      role: account.role,
+                      token: "dC1yZXg6dC1yZXhAMm50JUVsaXhpcjk=",
+                      isprofile: 1
+              }}
           end
 
           _  -> json conn, %{data: %{
-                              status: 404,
-                              message: "Password or email didn't match",
-                              token: ""
-                            }}
-          end
+                      status: 404,
+                      message: "Password or email didn't match",
+                      token: ""
+              }}
+      end
     end
   end
 
@@ -93,8 +93,8 @@ defmodule TRexRestPhoenix.AccountController do
       end
       _ ->
         json conn , %{ data: %{
-                            message: "Your email already register with our system",
-                            status: 400
+            message: "Your email already register with our system",
+            status: 400
           }
         }
     end

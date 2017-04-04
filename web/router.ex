@@ -43,6 +43,8 @@ defmodule TRexRestPhoenix.Router do
       options "/books", BookController, :options
       get "/book/:id", BookController, :tmpDelete
       options "/books/:id", BookController, :options
+      get "/book-feature", BookController, :bookFeatures
+      options "/book-feature", BookController, :options
 
       #carts route
       resources "/carts", CartController

@@ -9,6 +9,11 @@ defmodule TRexRestPhoenix.BookController do
     render(conn, "index.json", books: books)
   end
 
+  def bookFeatures(conn, _params) do
+    books = Repo.all(from book in Book, where: book.is_feature == true)
+    render(conn, "index.json", books: books)
+  end
+
   def create(conn, %{"title" => title,
                      "isbn" => isbn,
                      "price" => price,
@@ -20,6 +25,7 @@ defmodule TRexRestPhoenix.BookController do
                      "shipping_weight" => shipping,
                      "book_dimensions" => bookDm,
                      "photo" => photo,
+                     "is_feature" => is_feature,
                      "description" => description,
                      "category_id" => category,
                      "author_id" => author}) do
@@ -49,6 +55,7 @@ defmodule TRexRestPhoenix.BookController do
         book_dimensions: bookDm,
         status: 1,
         description: description,
+        is_feature: is_feature,
         author_name: Enum.join([author_param.firstname,author_param.lastname], " "),
         image: filename,
         category_id: category,
@@ -89,6 +96,7 @@ defmodule TRexRestPhoenix.BookController do
                      "book_dimensions" => bookDm,
                      "photo" => photo,
                      "description" => description,
+                     "is_feature" => is_feature,
                      "category_id" => category,
                      "author_id" => author
                      }) do
@@ -118,6 +126,7 @@ defmodule TRexRestPhoenix.BookController do
         book_dimensions: bookDm,
         status: 1,
         description: description,
+        is_feature:  is_feature,
         author_name: Enum.join([author_param.firstname,author_param.lastname], " "),
         image: filename,
         category_id: category,
@@ -164,6 +173,7 @@ defmodule TRexRestPhoenix.BookController do
       book_dimensions: book.book_dimensions,
       status: 0,
       description: book.description,
+      is_feature:  book.is_feature,
       author_name: book.author_name,
       image: book.image,
       category_id: book.category_id,

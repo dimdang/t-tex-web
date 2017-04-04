@@ -17,6 +17,7 @@ defmodule TRexRestPhoenix.Repo.Migrations.CreateBook do
       add :image, :text
       add :description, :text
       add :author_name, :string
+      add :is_feature, :boolean, default: false, null: false
       add :category_id, :integer
       add :author_id, :integer
 

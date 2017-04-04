@@ -10,6 +10,7 @@ defmodule TRexRestPhoenix.AuthorController do
 
   def create(conn, %{"firstname" => firstname,
                      "lastname" => lastname,
+                     "position" => position,
                      "description" => decription,
                      "photo" => photo}) do
 
@@ -26,6 +27,7 @@ defmodule TRexRestPhoenix.AuthorController do
       author = %{
         firstname: firstname,
         lastname: lastname,
+        position: position,
         description: decription,
         photo: filename,
         status: true
@@ -54,6 +56,7 @@ defmodule TRexRestPhoenix.AuthorController do
   def update(conn, %{"id" => id,
                      "firstname" => firstname,
                      "lastname" => lastname,
+                     "position" => position,
                      "description" => decription,
                      "photo" => photo}) do
 
@@ -70,6 +73,7 @@ defmodule TRexRestPhoenix.AuthorController do
       newAuthor = %{
         firstname: firstname,
         lastname: lastname,
+        position: position,
         description: decription,
         photo: filename,
         status: true
@@ -104,6 +108,7 @@ defmodule TRexRestPhoenix.AuthorController do
     newAuthor = %{
       firstname: author.firstname,
       lastname: author.lastname,
+      position: author.position,
       description: author.description,
       photo: author.photo,
       status: false

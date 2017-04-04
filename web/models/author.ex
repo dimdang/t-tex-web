@@ -4,6 +4,7 @@ defmodule TRexRestPhoenix.Author do
   schema "authors" do
     field :firstname, :string
     field :lastname, :string
+    field :position, :string
     field :description, :string
     field :photo, :string
     field :status, :boolean, default: false
@@ -16,7 +17,7 @@ defmodule TRexRestPhoenix.Author do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:firstname, :lastname, :description, :photo, :status])
-    |> validate_required([:firstname, :lastname, :description, :photo, :status])
+    |> cast(params, [:firstname, :lastname, :position, :description, :photo, :status])
+    |> validate_required([:firstname, :lastname, :position, :description, :photo, :status])
   end
 end

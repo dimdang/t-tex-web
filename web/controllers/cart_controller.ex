@@ -111,6 +111,7 @@ defmodule TRexRestPhoenix.CartController do
         page_count: book.page_count,
         language: book.language,
         isbn: book.isbn,
+        description: book.description,
         image: book.image,
         cart_id: c.id
       }

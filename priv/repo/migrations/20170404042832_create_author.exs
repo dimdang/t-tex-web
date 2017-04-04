@@ -1,14 +1,14 @@
-defmodule TRexRestPhoenix.Repo.Migrations.CreateUserProfile do
+defmodule TRexRestPhoenix.Repo.Migrations.CreateAuthor do
   use Ecto.Migration
 
   def change do
-    create table(:user_profile) do
+    create table(:authors) do
       add :firstname, :string
       add :lastname, :string
-      add :address, :string
+      add :position, :string
+      add :description, :text
       add :photo, :text
       add :status, :boolean, default: false, null: false
-      add :account_id, :integer
 
       timestamps()
     end

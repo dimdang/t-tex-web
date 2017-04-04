@@ -25,6 +25,7 @@ defmodule TRexRestPhoenix.BookView do
       image: book.image,
       description: book.description,
       author_name: book.author_name,
+      is_feature: book.is_feature,
       category_id: book.category_id,
       author_id: book.author_id}
   end

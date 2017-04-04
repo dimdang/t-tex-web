@@ -9,8 +9,8 @@ defmodule TRexRestPhoenix.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/uploads", from: Path.expand('./uploads'), gzip: false
-    # at: "/", from: :t_rex_rest_phoenix, gzip: false,
-    #   only: ~w(css fonts images js favicon.ico robots.txt),
+    #at: "/", from: :t_rex_rest_phoenix, gzip: false,
+    #only: ~w(css fonts lib lang images js favicon.ico robots.txt swagger-ui.js swagger-ui.min.js)
 
 
   # Code reloading can be explicitly enabled under the

@@ -2,7 +2,7 @@ defmodule TRexRestPhoenix.AuthorControllerTest do
   use TRexRestPhoenix.ConnCase
 
   alias TRexRestPhoenix.Author
-  @valid_attrs %{description: "some content", firstname: "some content", lastname: "some content", photo: "some content", status: true}
+  @valid_attrs %{description: "some content", firstname: "some content", lastname: "some content", photo: "some content", position: "some content", status: true}
   @invalid_attrs %{}
 
   setup %{conn: conn} do
@@ -20,6 +20,7 @@ defmodule TRexRestPhoenix.AuthorControllerTest do
     assert json_response(conn, 200)["data"] == %{"id" => author.id,
       "firstname" => author.firstname,
       "lastname" => author.lastname,
+      "position" => author.position,
       "description" => author.description,
       "photo" => author.photo,
       "status" => author.status}

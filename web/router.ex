@@ -1,13 +1,11 @@
 defmodule TRexRestPhoenix.Router do
   use TRexRestPhoenix.Web, :router
-  use PhoenixSwagger
 
   pipeline :api do
     plug CORSPlug, [origin: "*"]
     plug BasicAuth, use_config: {:t_rex_rest_phoenix, :t_rex_security}
     plug :accepts, ["json"]
   end
-
 
   scope "/api/v1", TRexRestPhoenix do
     pipe_through :api
@@ -74,9 +72,9 @@ defmodule TRexRestPhoenix.Router do
   # scope "/api", TRexRestPhoenix do
   #   pipe_through :api
   # end
-  
+
   scope "/api/swagger" do
-    forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :t_rex_rest_phoenix, swagger_file: "ttex.json"
+    forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :t_rex_rest_phoenix, swagger_file: "swagger.json"
   end
 
   def swagger_info do
@@ -84,7 +82,7 @@ defmodule TRexRestPhoenix.Router do
       info: %{
         version: "1.0",
         title: "T-Tex-Web"
-      }    
+      }
     }
   end
 end

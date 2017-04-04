@@ -1,0 +1,284 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/api/v1/category/{id}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Delete category",
+        "responses": {
+          "203": {
+            "description": "No Content - Deleted Successfully"
+          }
+        },
+        "parameters": [
+          {
+            "x-example": 4,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "category ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CategoryController.tmpDelete",
+        "description": "Delete a category by ID"
+      }
+    },
+    "/api/v1/categories/{id}": {
+      "put": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Update category",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CategoryResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "name": "Science",
+                  "description": "Store science books"
+                }
+              }
+            },
+            "description": "Updated Successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 3,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "User ID"
+          },
+          {
+            "x-example": {
+              "category": {
+                "status": true,
+                "name": "Science",
+                "description": "Store science books"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CategoryRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The user details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CategoryController.update",
+        "description": "Update all attributes of a category",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Show category",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CategoryResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "name": "History",
+                  "description": "Store history books"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 1,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "category ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CategoryController.show",
+        "description": "Show a category by ID"
+      }
+    },
+    "/api/v1/categories": {
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Create category",
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/CategoryResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "name": "History",
+                  "description": "Store history books"
+                }
+              }
+            },
+            "description": "Category created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "category": {
+                "status": true,
+                "name": "History",
+                "description": "Store history books"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CategoryRequest"
+            },
+            "required": false,
+            "name": "category",
+            "in": "body",
+            "description": "The category details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CategoryController.create",
+        "description": "Creates a new category",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "List all categories",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CategoriesResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "status": true,
+                    "name": "History",
+                    "description": "Store history books"
+                  },
+                  {
+                    "status": true,
+                    "name": "Mind Book",
+                    "description": "Store mind books"
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.CategoryController.index",
+        "description": "List all categories in the database"
+      }
+    }
+  },
+  "info": {
+    "version": "1.0",
+    "title": "T-Tex-Web"
+  },
+  "host": "localhost",
+  "definitions": {
+    "CategoryResponse": {
+      "type": "object",
+      "title": "Category Response",
+      "properties": {
+        "data": {
+          "description": "The category details",
+          "$ref": "#/definitions/Category"
+        }
+      },
+      "description": "Response schema for single category"
+    },
+    "CategoryRequest": {
+      "type": "object",
+      "title": "Category Request",
+      "properties": {
+        "category": {
+          "description": "The category details",
+          "$ref": "#/definitions/Category"
+        }
+      },
+      "description": "Post body for creating a category"
+    },
+    "Category": {
+      "type": "object",
+      "title": "Category",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "description": "Category status"
+        },
+        "name": {
+          "type": "string",
+          "description": "Category name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Category description"
+        }
+      },
+      "example": {
+        "status": true,
+        "name": "History",
+        "description": "All books relate to history"
+      },
+      "description": "A category for books"
+    },
+    "CategoriesResponse": {
+      "type": "object",
+      "title": "Category Response",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Category"
+          },
+          "description": "The categories details"
+        }
+      },
+      "description": "Response schema for multiple categories"
+    }
+  }
+}

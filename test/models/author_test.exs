@@ -3,7 +3,7 @@ defmodule TRexRestPhoenix.AuthorTest do
 
   alias TRexRestPhoenix.Author
 
-  @valid_attrs %{description: "some content", firstname: "some content", lastname: "some content", photo: "some content", status: true}
+  @valid_attrs %{description: "some content", firstname: "some content", lastname: "some content", photo: "some content", position: "some content", status: true}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

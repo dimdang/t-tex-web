@@ -1,6 +1,59 @@
 {
   "swagger": "2.0",
   "paths": {
+    "/api/v1/login": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "User login",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AccountsResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "token": "2we4YUIOcop09mguy=",
+                  "role": 1,
+                  "lastname": "xxx",
+                  "isprofile": 1,
+                  "firstname": "xxx",
+                  "email": "xxx@mail.com"
+                }
+              }
+            },
+            "description": "Login successfully!"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "account": {
+                "password": "12345678",
+                "email": "mail@mail.com"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/AccountRequest"
+            },
+            "required": false,
+            "name": "category",
+            "in": "body",
+            "description": "The account details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.AccountController.login",
+        "description": "User login with email",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
     "/api/v1/category/{id}": {
       "get": {
         "tags": [
@@ -59,7 +112,7 @@
             "required": true,
             "name": "id",
             "in": "path",
-            "description": "User ID"
+            "description": "Category ID"
           },
           {
             "x-example": {
@@ -75,7 +128,7 @@
             "required": false,
             "name": "user",
             "in": "body",
-            "description": "The user details"
+            "description": "The category details"
           }
         ],
         "operationId": "TRexRestPhoenix.CategoryController.update",
@@ -209,6 +262,795 @@
         "operationId": "TRexRestPhoenix.CategoryController.index",
         "description": "List all categories in the database"
       }
+    },
+    "/api/v1/books/{id}": {
+      "put": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Update book",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/BookResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "unit": 99,
+                  "title": "How to program in C",
+                  "status": true,
+                  "shipping_weight": 2,
+                  "publisher_name": "Deitel Inc",
+                  "published_year": "2013",
+                  "price": 12.0,
+                  "page_count": "800",
+                  "language": "en",
+                  "isbn": "QWE34F98UIYO",
+                  "is_feature": true,
+                  "image": "photo.jpg",
+                  "description": "c programming for beginner",
+                  "category_id": 1,
+                  "book_dimensions": "12*12*0.9",
+                  "author_name": "Paul Deteil",
+                  "author_id": 2
+                }
+              }
+            },
+            "description": "Updated Successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 3,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "Book ID"
+          },
+          {
+            "x-example": {
+              "book": {
+                "unit": 99,
+                "title": "How to program in C",
+                "status": true,
+                "shipping_weight": 2,
+                "publisher_name": "Deitel Inc",
+                "published_year": "2013",
+                "price": 12.0,
+                "page_count": "800",
+                "language": "en",
+                "isbn": "QWE34F98UIYO",
+                "is_feature": true,
+                "image": "photo.jpg",
+                "description": "c programming for beginner",
+                "category_id": 1,
+                "book_dimensions": "12*12*0.9",
+                "author_name": "Paul Deteil",
+                "author_id": 2
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/BookRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The book details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.BookController.update",
+        "description": "Update all attributes of a book",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Show book",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/BookResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "unit": 99,
+                  "title": "How to program in C",
+                  "status": true,
+                  "shipping_weight": 2,
+                  "publisher_name": "Deitel Inc",
+                  "published_year": "2013",
+                  "price": 12.0,
+                  "page_count": "800",
+                  "language": "en",
+                  "isbn": "QWE34F98UIYO",
+                  "is_feature": true,
+                  "image": "photo.jpg",
+                  "description": "c programming for beginner",
+                  "category_id": 1,
+                  "book_dimensions": "12*12*0.9",
+                  "author_name": "Paul Deteil",
+                  "author_id": 2
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 1,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "book ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.BookController.show",
+        "description": "Show a book by ID"
+      }
+    },
+    "/api/v1/books": {
+      "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Create book",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/BookResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "unit": 99,
+                  "title": "How to program in C",
+                  "status": true,
+                  "shipping_weight": 2,
+                  "publisher_name": "Deitel Inc",
+                  "published_year": "2013",
+                  "price": 12.0,
+                  "page_count": "800",
+                  "language": "en",
+                  "isbn": "QWE34F98UIYO",
+                  "is_feature": true,
+                  "image": "photo.jpg",
+                  "description": "c programming for beginner",
+                  "category_id": 1,
+                  "book_dimensions": "12*12*0.9",
+                  "author_name": "Paul Deteil",
+                  "author_id": 2
+                }
+              }
+            },
+            "description": "Book created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "book": {
+                "unit": 99,
+                "title": "How to program in C",
+                "status": true,
+                "shipping_weight": 2,
+                "publisher_name": "Deitel Inc",
+                "published_year": "2013",
+                "price": 12.0,
+                "page_count": "800",
+                "language": "en",
+                "isbn": "QWE34F98UIYO",
+                "is_feature": true,
+                "image": "photo.jpg",
+                "description": "c programming for beginner",
+                "category_id": 1,
+                "book_dimensions": "12*12*0.9",
+                "author_name": "Paul Deteil",
+                "author_id": 2
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/BookRequest"
+            },
+            "required": false,
+            "name": "book",
+            "in": "body",
+            "description": "The book details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.BookController.create",
+        "description": "Creates a new book",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "List all books",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/BooksResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "unit": 99,
+                    "title": "How to program in C",
+                    "status": true,
+                    "shipping_weight": 2,
+                    "publisher_name": "Deitel Inc",
+                    "published_year": "2013",
+                    "price": 12.0,
+                    "page_count": "800",
+                    "language": "en",
+                    "isbn": "QWE34F98UIYO",
+                    "is_feature": true,
+                    "image": "photo.jpg",
+                    "description": "c programming for beginner",
+                    "category_id": 1,
+                    "book_dimensions": "12*12*0.9",
+                    "author_name": "Paul Deteil",
+                    "author_id": 2
+                  },
+                  {
+                    "unit": 99,
+                    "title": "How to program in C",
+                    "status": true,
+                    "shipping_weight": 2,
+                    "publisher_name": "Deitel Inc",
+                    "published_year": "2013",
+                    "price": 12.0,
+                    "page_count": "800",
+                    "language": "en",
+                    "isbn": "QWE34F98UIYO",
+                    "is_feature": true,
+                    "image": "photo.jpg",
+                    "description": "c programming for beginner",
+                    "category_id": 1,
+                    "book_dimensions": "12*12*0.9",
+                    "author_name": "Paul Deteil",
+                    "author_id": 2
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.BookController.index",
+        "description": "List all books in the database"
+      }
+    },
+    "/api/v1/book/{id}": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Delete book",
+        "responses": {
+          "200": {
+            "description": "No Content - Deleted Successfully"
+          }
+        },
+        "parameters": [
+          {
+            "x-example": 4,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "book ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.BookController.tmpDelete",
+        "description": "Delete a book by ID"
+      }
+    },
+    "/api/v1/book-feature": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "List all books",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/BooksResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "unit": 99,
+                    "title": "How to program in C",
+                    "status": true,
+                    "shipping_weight": 2,
+                    "publisher_name": "Deitel Inc",
+                    "published_year": "2013",
+                    "price": 12.0,
+                    "page_count": "800",
+                    "language": "en",
+                    "isbn": "QWE34F98UIYO",
+                    "is_feature": true,
+                    "image": "photo.jpg",
+                    "description": "c programming for beginner",
+                    "category_id": 1,
+                    "book_dimensions": "12*12*0.9",
+                    "author_name": "Paul Deteil",
+                    "author_id": 2
+                  },
+                  {
+                    "unit": 99,
+                    "title": "How to program in C",
+                    "status": true,
+                    "shipping_weight": 2,
+                    "publisher_name": "Deitel Inc",
+                    "published_year": "2013",
+                    "price": 12.0,
+                    "page_count": "800",
+                    "language": "en",
+                    "isbn": "QWE34F98UIYO",
+                    "is_feature": true,
+                    "image": "photo.jpg",
+                    "description": "c programming for beginner",
+                    "category_id": 1,
+                    "book_dimensions": "12*12*0.9",
+                    "author_name": "Paul Deteil",
+                    "author_id": 2
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.BookController.bookFeatures",
+        "description": "List all books in the database"
+      }
+    },
+    "/api/v1/authors/{id}": {
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "summary": "Show author",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AuthorResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "position": "writer",
+                  "photo": "photo.jpg",
+                  "lastname": "Kelvin",
+                  "firstname": "DK",
+                  "description": "he is a writer and gammer"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 1,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "author ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.AuthorController.show",
+        "description": "Show a author by ID"
+      }
+    },
+    "/api/v1/authors": {
+      "post": {
+        "tags": [
+          "Author"
+        ],
+        "summary": "Create authors",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AuthorResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "position": "writer",
+                  "photo": "photo.jpg",
+                  "lastname": "Kelvin",
+                  "firstname": "DK",
+                  "description": "he is a writer and gammer"
+                }
+              }
+            },
+            "description": "author created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "author": {
+                "status": true,
+                "position": "writer",
+                "photo": "photo.jpg",
+                "lastname": "Kelvin",
+                "firstname": "DK",
+                "description": "he is a writer and gammer"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/AuthorRequest"
+            },
+            "required": false,
+            "name": "author",
+            "in": "body",
+            "description": "The category details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.AuthorController.create",
+        "description": "Creates a new authors",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "summary": "List all authors",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AuthorsResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "status": true,
+                    "position": "writer",
+                    "photo": "photo.jpg",
+                    "lastname": "Kelvin",
+                    "firstname": "DK",
+                    "description": "he is a writer and gammer"
+                  },
+                  {
+                    "status": true,
+                    "position": "writer",
+                    "photo": "photo.jpg",
+                    "lastname": "Kelvin",
+                    "firstname": "Anna",
+                    "description": "he is a writer and gammer"
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.AuthorController.index",
+        "description": "List all authors in the database"
+      }
+    },
+    "/api/v1/author/{id}": {
+      "put": {
+        "tags": [
+          "Author"
+        ],
+        "summary": "Update author",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AuthorResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "position": "writer",
+                  "photo": "photo.jpg",
+                  "lastname": "Kelvin",
+                  "firstname": "DK",
+                  "description": "he is a writer and gammer"
+                }
+              }
+            },
+            "description": "Updated Successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 3,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "author ID"
+          },
+          {
+            "x-example": {
+              "author": {
+                "status": true,
+                "position": "writer",
+                "photo": "photo.jpg",
+                "lastname": "Kelvin",
+                "firstname": "DK",
+                "description": "he is a writer and gammer"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/AuthorRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The category details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.AuthorController.update",
+        "description": "Update all attributes of a author",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "summary": "Delete author",
+        "responses": {
+          "203": {
+            "description": "No Content - Deleted Successfully"
+          }
+        },
+        "parameters": [
+          {
+            "x-example": 4,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "author ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.AuthorController.tmpDelete",
+        "description": "Delete a author by ID"
+      }
+    },
+    "/api/v1/accounts/{id}": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Update account",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AccountResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "role": 1,
+                  "email": "xxx@gmail.com"
+                }
+              }
+            },
+            "description": "Updated Successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 3,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "account ID"
+          },
+          {
+            "x-example": {
+              "account": {
+                "status": true,
+                "role": 1,
+                "password": "12345678",
+                "email": "xxx@gmail.com"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/AccountRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The account details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.AccountController.update",
+        "description": "Update all attributes of a account",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Show account",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AccountResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "role": 1,
+                  "email": "xxx@mail.com"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 1,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "account ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.AccountController.show",
+        "description": "Show a account by ID"
+      }
+    },
+    "/api/v1/accounts": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Create account",
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/AccountResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "role": 1,
+                  "email": "xxx@gmail.com"
+                }
+              }
+            },
+            "description": "Category created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "category": {
+                "status": true,
+                "role": 1,
+                "password": "12345678",
+                "email": "xxx@mail.com"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/AccountRequest"
+            },
+            "required": false,
+            "name": "account",
+            "in": "body",
+            "description": "The account details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.AccountController.create",
+        "description": "Creates a new account",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "List all account",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AccountResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "status": true,
+                    "role": 1,
+                    "email": "mail@mail.com"
+                  },
+                  {
+                    "status": true,
+                    "role": 1,
+                    "email": "gmail@gmail.com"
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.AccountController.index",
+        "description": "List all account in the database"
+      }
     }
   },
   "info": {
@@ -243,6 +1085,7 @@
       "type": "object",
       "title": "Category",
       "required": [
+        "status",
         "name"
       ],
       "properties": {
@@ -279,6 +1122,308 @@
         }
       },
       "description": "Response schema for multiple categories"
+    },
+    "BooksResponse": {
+      "type": "object",
+      "title": "Book Response",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Book"
+          },
+          "description": "The books details"
+        }
+      },
+      "description": "Response schema for multiple books"
+    },
+    "BookResponse": {
+      "type": "object",
+      "title": "Book Response",
+      "properties": {
+        "data": {
+          "description": "The book details",
+          "$ref": "#/definitions/Book"
+        }
+      },
+      "description": "Response schema for single book"
+    },
+    "BookRequest": {
+      "type": "object",
+      "title": "Book Request",
+      "properties": {
+        "book": {
+          "description": "The book details",
+          "$ref": "#/definitions/Book"
+        }
+      },
+      "description": "Post body for creating a book"
+    },
+    "Book": {
+      "type": "object",
+      "title": "Book",
+      "required": [
+        "author_id",
+        "category_id",
+        "is_feature",
+        "author_name",
+        "description",
+        "image",
+        "status",
+        "book_dimensions",
+        "shipping_weight",
+        "language",
+        "page_count",
+        "published_year",
+        "publisher_name",
+        "unit",
+        "price",
+        "isbn",
+        "title"
+      ],
+      "properties": {
+        "unit": {
+          "type": "integer",
+          "description": "Book unit"
+        },
+        "title": {
+          "type": "string",
+          "description": "Book name"
+        },
+        "status": {
+          "type": "integer",
+          "description": "Book status"
+        },
+        "shipping_weight": {
+          "type": "float",
+          "description": "Book shipping weight"
+        },
+        "publisher_name": {
+          "type": "string",
+          "description": "Book publisher name"
+        },
+        "published_year": {
+          "type": "string",
+          "description": "Book published year"
+        },
+        "price": {
+          "type": "float",
+          "description": "Book price"
+        },
+        "page_count": {
+          "type": "string",
+          "description": "Book page count"
+        },
+        "language": {
+          "type": "string",
+          "description": "Book language"
+        },
+        "isbn": {
+          "type": "string",
+          "description": "Book ISBN"
+        },
+        "is_feature": {
+          "type": "boolean",
+          "description": "Book feature"
+        },
+        "image": {
+          "type": "string",
+          "description": "Book image"
+        },
+        "description": {
+          "type": "string",
+          "description": "Book description"
+        },
+        "category_id": {
+          "type": "integer",
+          "description": "category id"
+        },
+        "book_dimensions": {
+          "type": "string",
+          "description": "Book dimensions"
+        },
+        "author_name": {
+          "type": "string",
+          "description": "Book author name"
+        },
+        "author_id": {
+          "type": "integer",
+          "description": "author id"
+        }
+      },
+      "example": {
+        "unit": 99,
+        "title": "How to program in C",
+        "status": true,
+        "shipping_weight": 2,
+        "publisher_name": "Deitel Inc",
+        "published_year": "2013",
+        "price": 12.0,
+        "page_count": "800",
+        "language": "en",
+        "isbn": "QWE34F98UIYO",
+        "is_feature": true,
+        "image": "photo.jpg",
+        "description": "c programming for beginner",
+        "category_id": 1,
+        "book_dimensions": "12*12*0.9",
+        "author_name": "Paul Deteil",
+        "author_id": 2
+      },
+      "description": "A book"
+    },
+    "AuthorsResponse": {
+      "type": "object",
+      "title": "Author Response",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Author"
+          },
+          "description": "The author details"
+        }
+      },
+      "description": "Response schema for multiple author"
+    },
+    "AuthorResponse": {
+      "type": "object",
+      "title": "Author Response",
+      "properties": {
+        "data": {
+          "description": "The author details",
+          "$ref": "#/definitions/Author"
+        }
+      },
+      "description": "Response schema for single author"
+    },
+    "AuthorRequest": {
+      "type": "object",
+      "title": "Author Request",
+      "properties": {
+        "author": {
+          "description": "The author details",
+          "$ref": "#/definitions/Author"
+        }
+      },
+      "description": "Post body for creating a author"
+    },
+    "Author": {
+      "type": "object",
+      "title": "Author",
+      "required": [
+        "status",
+        "photo",
+        "position",
+        "lastname",
+        "firstname"
+      ],
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "description": "Author status"
+        },
+        "position": {
+          "type": "string",
+          "description": "Author position"
+        },
+        "photo": {
+          "type": "string",
+          "description": "Author photo"
+        },
+        "lastname": {
+          "type": "string",
+          "description": "Author lastname"
+        },
+        "firstname": {
+          "type": "string",
+          "description": "Author firstname"
+        },
+        "description": {
+          "type": "string",
+          "description": "Author description"
+        }
+      },
+      "example": {
+        "status": true,
+        "position": "writer",
+        "photo": "photo.jpg",
+        "lastname": "kelvin",
+        "firstname": "DK",
+        "description": "He is a writer and developer"
+      },
+      "description": "A author"
+    },
+    "AccountsResponse": {
+      "type": "object",
+      "title": "Accounts Response",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Account"
+          },
+          "description": "The account details"
+        }
+      },
+      "description": "Response schema for multiple accounts"
+    },
+    "AccountResponse": {
+      "type": "object",
+      "title": "Account Response",
+      "properties": {
+        "data": {
+          "description": "The account details",
+          "$ref": "#/definitions/Account"
+        }
+      },
+      "description": "Response schema for single account"
+    },
+    "AccountRequest": {
+      "type": "object",
+      "title": "Account Request",
+      "properties": {
+        "account": {
+          "description": "The account details",
+          "$ref": "#/definitions/Account"
+        }
+      },
+      "description": "Post boday for creating a account"
+    },
+    "Account": {
+      "type": "object",
+      "title": "Account",
+      "required": [
+        "status",
+        "role",
+        "password",
+        "email"
+      ],
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "description": "Account status"
+        },
+        "role": {
+          "type": "integer",
+          "description": "Account role"
+        },
+        "password": {
+          "type": "string",
+          "description": "Account password"
+        },
+        "email": {
+          "type": "string",
+          "description": "Account email"
+        }
+      },
+      "example": {
+        "status": true,
+        "role": 1,
+        "password": "1234578",
+        "email": "mail@mail.com"
+      },
+      "description": "A account for register"
     }
   }
 }

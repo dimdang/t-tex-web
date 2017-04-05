@@ -5,12 +5,76 @@ defmodule TRexRestPhoenix.AccountController do
 
   alias TRexRestPhoenix.Account
   alias TRexRestPhoenix.UserProfile
+  use PhoenixSwagger
+
+  def swagger_definitions do
+    %{
+      Account: swagger_schema do
+        title "Account"
+        description "A account for register"
+        properties do
+          email :string, "Account email", required: true
+          password :string, "Account password", required: true
+          role :integer, "Account role", required: true
+          status :boolean, "Account status", required: true
+        end
+        example %{
+          email: "mail@mail.com",
+          password: "1234578",
+          role: 1,
+          status: true
+        }
+      end,
+      AccountRequest: swagger_schema do
+        title "Account Request"
+        description "Post boday for creating a account"
+        property :account, Schema.ref(:Account), "The account details"
+      end,
+      AccountResponse: swagger_schema do
+        title "Account Response"
+        description "Response schema for single account"
+        property :data, Schema.ref(:Account), "The account details"
+      end,
+      AccountsResponse: swagger_schema do
+        title "Accounts Response"
+        description "Response schema for multiple accounts"
+        property :data, Schema.array(:Account), "The account details"
+      end
+    }
+  end
+
+  swagger_path(:index) do
+    get "/api/v1/accounts"
+    summary "List all account"
+    description "List all account in the database"
+    produces "application/json"
+    response 200, "OK", Schema.ref(:AccountResponse), example: %{
+      data: [
+        %{email: "mail@mail.com", role: 1, status: true},
+        %{email: "gmail@gmail.com", role: 1, status: true}
+      ]
+    }
+  end
 
   def index(conn, _params) do
 
     accounts = Repo.all(from account in Account, where: account.status == true)
 
     render(conn, "index.json", accounts: accounts)
+  end
+
+  swagger_path(:login) do
+    post "/api/v1/login"
+    summary "User login"
+    description "User login with email"
+    consumes "application/json"
+    produces "application/json"
+    parameter :category, :body, Schema.ref(:AccountRequest), "The account details", example: %{
+      account: %{email: "mail@mail.com", password: "12345678"}
+    }
+    response 200, "Login successfully!", Schema.ref(:AccountsResponse), example: %{
+      data: %{token: "2we4YUIOcop09mguy=", role: 1, firstname: "xxx", lastname: "xxx", isprofile: 1, email: "xxx@mail.com"}
+    }
   end
 
   # user login
@@ -70,6 +134,20 @@ defmodule TRexRestPhoenix.AccountController do
     end
   end
 
+  swagger_path(:create) do
+    post "/api/v1/accounts"
+    summary "Create account"
+    description "Creates a new account"
+    consumes "application/json"
+    produces "application/json"
+    parameter :account, :body, Schema.ref(:AccountRequest), "The account details", example: %{
+      category: %{email: "xxx@mail.com", password: "12345678", role: 1, status: true}
+    }
+    response 201, "Category created OK", Schema.ref(:AccountResponse), example: %{
+      data: %{email: "xxx@gmail.com", role: 1, status: true}
+    }
+  end
+
   def create(conn, %{"account" => account_params}) do
     changeset = Account.changeset(%Account{}, account_params)
 
@@ -100,9 +178,37 @@ defmodule TRexRestPhoenix.AccountController do
     end
   end
 
+  swagger_path(:show) do
+    get "/api/v1/accounts/{id}"
+    summary "Show account"
+    description "Show a account by ID"
+    produces "application/json"
+    parameter :id, :path, :integer, "account ID", required: true, example: 1
+    response 200, "OK", Schema.ref(:AccountResponse), example: %{
+      data:  %{email: "xxx@mail.com", role: 1, status: true}
+    }
+  end
+
   def show(conn, %{"id" => id}) do
     account = Repo.get!(Account, id)
     render(conn, "show.json", account: account)
+  end
+
+  swagger_path(:update) do
+     put "/api/v1/accounts/{id}"
+     summary "Update account"
+     description "Update all attributes of a account"
+     consumes "application/json"
+     produces "application/json"
+     parameters do
+       id :path, :integer, "account ID", required: true, example: 3
+       user :body, Schema.ref(:AccountRequest), "The account details", example: %{
+         account: %{email: "xxx@gmail.com", password: "12345678", role: 1, status: true}
+       }
+     end
+     response 200, "Updated Successfully", Schema.ref(:AccountResponse), example: %{
+       data: %{email: "xxx@gmail.com", role: 1, status: true}
+     }
   end
 
   def update(conn, %{"id" => id, "account" => account_params}) do

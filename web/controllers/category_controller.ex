@@ -12,7 +12,7 @@ defmodule TRexRestPhoenix.CategoryController do
         properties do
            name :string, "Category name", required: true
            description :string, "Category description"
-           status :boolean, "Category status"
+           status :boolean, "Category status", required: true
         end
         example %{
           name: "History",
@@ -109,8 +109,8 @@ defmodule TRexRestPhoenix.CategoryController do
      consumes "application/json"
      produces "application/json"
      parameters do
-       id :path, :integer, "User ID", required: true, example: 3
-       user :body, Schema.ref(:CategoryRequest), "The user details", example: %{
+       id :path, :integer, "Category ID", required: true, example: 3
+       user :body, Schema.ref(:CategoryRequest), "The category details", example: %{
          category: %{name: "Science", description: "Store science books", status: true}
        }
      end

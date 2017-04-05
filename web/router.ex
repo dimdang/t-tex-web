@@ -54,6 +54,7 @@ defmodule TRexRestPhoenix.Router do
 
       #checkout route
       resources "/checkouts", CheckoutController
+      options "/checkouts/:id", CheckoutController, :options
       options "/checkouts", CheckoutController, :options
 
       post "/payment", CheckoutController, :payment

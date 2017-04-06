@@ -1,6 +1,254 @@
 {
   "swagger": "2.0",
   "paths": {
+    "/api/v1/user_profile/{id}": {
+      "put": {
+        "tags": [
+          "UserProfile"
+        ],
+        "summary": "Update user profile",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/UserProfileResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "photo": "myphoto.jpg",
+                  "phone": "097878789",
+                  "lastname": "Kelvin",
+                  "firstname": "DK",
+                  "address": "Phnom Penh",
+                  "account_id": 1
+                }
+              }
+            },
+            "description": "Updated Successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 3,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "user profile ID"
+          },
+          {
+            "x-example": {
+              "userprofile": {
+                "status": true,
+                "photo": "myphoto.jpg",
+                "phone": "097878789",
+                "lastname": "Kelvin",
+                "firstname": "DK",
+                "address": "Phnom Penh",
+                "account_id": 1
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/UserProfileRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The user profile details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.UserProfileController.update",
+        "description": "Update all attributes of a user profile",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "UserProfile"
+        ],
+        "summary": "Delete user profile",
+        "responses": {
+          "203": {
+            "description": "No Content - Deleted Successfully"
+          }
+        },
+        "parameters": [
+          {
+            "x-example": 4,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "user profile ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.UserProfileController.delete",
+        "description": "Delete a user profile by ID"
+      }
+    },
+    "/api/v1/user_profile": {
+      "post": {
+        "tags": [
+          "UserProfile"
+        ],
+        "summary": "Create user profile",
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/UserProfileResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": true,
+                  "photo": "myphoto.jpg",
+                  "phone": "093433232",
+                  "lastname": "Kelvin",
+                  "firstname": "DK",
+                  "address": "Phnom Penh",
+                  "account_id": 1
+                }
+              }
+            },
+            "description": "user profile created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "status": true,
+              "photo": "myphoto.jpg",
+              "phone": "093433232",
+              "lastname": "Kelvin",
+              "firstname": "DK",
+              "address": "Phnom Penh",
+              "account_id": 1
+            },
+            "schema": {
+              "$ref": "#/definitions/UserProfileRequest"
+            },
+            "required": false,
+            "name": "userprofile",
+            "in": "body",
+            "description": "The category details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.UserProfileController.create",
+        "description": "Creates a new user profile",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "UserProfile"
+        ],
+        "summary": "List all user profile",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/UserProfilesResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "status": true,
+                    "photo": "myphoto.jpg",
+                    "phone": "093433232",
+                    "lastname": "Kelvin",
+                    "firstname": "DK",
+                    "address": "Phnom Penh",
+                    "account_id": 1
+                  },
+                  {
+                    "status": true,
+                    "photo": "myphoto.jpg",
+                    "phone": "093433232",
+                    "lastname": "Kelvin",
+                    "firstname": "DK",
+                    "address": "Phnom Penh",
+                    "account_id": 1
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.UserProfileController.index",
+        "description": "List all user profile in the database"
+      }
+    },
+    "/api/v1/payment": {
+      "post": {
+        "tags": [
+          "Checkout"
+        ],
+        "summary": "Create payment",
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/CheckoutResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "number": 4111111111111111,
+                  "name": "DK",
+                  "exp_year": 2020,
+                  "exp_month": 10,
+                  "cvc": 123,
+                  "amount": 1000
+                }
+              }
+            },
+            "description": "payment created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "payment": {
+                "number": 4111111111111111,
+                "name": "DK",
+                "exp_year": 2020,
+                "exp_month": 10,
+                "cvc": 123,
+                "amount": 1000
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CheckoutRequest"
+            },
+            "required": false,
+            "name": "payment",
+            "in": "body",
+            "description": "The payment details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CheckoutController.payment",
+        "description": "Creates a new payment",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
     "/api/v1/login": {
       "post": {
         "tags": [
@@ -52,6 +300,234 @@
         "consumes": [
           "application/json"
         ]
+      }
+    },
+    "/api/v1/checkouts/{id}": {
+      "put": {
+        "tags": [
+          "Checkout"
+        ],
+        "summary": "Update checkout",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CheckoutResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": 1,
+                  "account_id": "1"
+                }
+              }
+            },
+            "description": "Updated Successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 3,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "Checkout ID"
+          },
+          {
+            "x-example": {
+              "checkout": {
+                "status": 1,
+                "account_id": "1"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CheckoutRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The checkout details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CheckoutController.update",
+        "description": "Update all attributes of a checkout",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Checkout"
+        ],
+        "summary": "Show checkout",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CheckoutResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": 1,
+                  "profile": {
+                    "photo": "myphoto.jpg",
+                    "phone": "0933334343",
+                    "lastname": "DK",
+                    "id": 1,
+                    "firstname": "Kelvin",
+                    "email": "xxx@mail.com",
+                    "address": "Phnom Penh"
+                  },
+                  "date": "2017-04-05T03:51:18.102568",
+                  "books": {
+                    "unit": 2,
+                    "title": "How to program in C",
+                    "sub_total": 50,
+                    "shipping_weight": 1.2,
+                    "publisher_name": "Paul Deteil Inc.",
+                    "price": 25,
+                    "page_count": "235",
+                    "language": "en",
+                    "isbn": "454339403",
+                    "image": "d4c5b53a-1914-11e7-b957-e0db559fd419.jpg",
+                    "book_id": 7
+                  }
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 1,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "checkout ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CheckoutController.show",
+        "description": "Show a checkout by ID"
+      },
+      "delete": {
+        "tags": [
+          "Checkout"
+        ],
+        "summary": "Delete checkout",
+        "responses": {
+          "203": {
+            "description": "No Content - Deleted Successfully"
+          }
+        },
+        "parameters": [
+          {
+            "x-example": 4,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "checkout ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CheckoutController.delete",
+        "description": "Delete a checkout by ID"
+      }
+    },
+    "/api/v1/checkouts": {
+      "post": {
+        "tags": [
+          "Checkout"
+        ],
+        "summary": "Create checkout",
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/CheckoutResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "status": 1,
+                  "account_id": "1"
+                }
+              }
+            },
+            "description": "Checkout created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "checkout": {
+                "status": 1,
+                "account_id": "1"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CheckoutRequest"
+            },
+            "required": false,
+            "name": "checkout",
+            "in": "body",
+            "description": "The checkout details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CheckoutController.create",
+        "description": "Creates a new checkout",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Checkout"
+        ],
+        "summary": "List all checkouts",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CheckoutsResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "status": "will delivery",
+                    "profile": {
+                      "photo": "user_1.jpg",
+                      "phone": "098987877",
+                      "lastname": "Kelvin",
+                      "id": 1,
+                      "firstname": "DK",
+                      "email": "xxx@mail.com",
+                      "address": "Phnom Penh"
+                    },
+                    "id": 7,
+                    "date": "2017-03-23T08:59:16.234776"
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.CheckoutController.index",
+        "description": "List all checkouts in the database"
       }
     },
     "/api/v1/category/{id}": {
@@ -261,6 +737,293 @@
         "parameters": [],
         "operationId": "TRexRestPhoenix.CategoryController.index",
         "description": "List all categories in the database"
+      }
+    },
+    "/api/v1/carts/{id}": {
+      "put": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Update cart",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CartResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "unit": 6,
+                  "status": 1,
+                  "price": 12.0,
+                  "book_id": 1,
+                  "account_id": 1
+                }
+              }
+            },
+            "description": "Updated Successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 3,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "Cart ID"
+          },
+          {
+            "x-example": {
+              "cart": {
+                "unit": 6,
+                "status": 1,
+                "price": 12.0,
+                "book_id": 1,
+                "account_id": 1
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CartsRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The cart details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CartController.update",
+        "description": "Update all attributes of a cart",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Show cart",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CartResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "unit": 6,
+                  "status": 1,
+                  "price": 12.0,
+                  "book_id": 1,
+                  "account_id": 1
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": 1,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "category ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CartController.show",
+        "description": "Show a cart by ID"
+      },
+      "delete": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Delete cart",
+        "responses": {
+          "203": {
+            "description": "No Content - Deleted Successfully"
+          }
+        },
+        "parameters": [
+          {
+            "x-example": 4,
+            "type": "integer",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "category ID"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CartController.delete",
+        "description": "Delete a category by ID"
+      }
+    },
+    "/api/v1/carts/user/{id}": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "List all books in cart",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CartsResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "unit": 99,
+                    "title": "How to program in C",
+                    "status": true,
+                    "shipping_weight": 2,
+                    "publisher_name": "Deitel Inc",
+                    "published_year": "2013",
+                    "price": 12.0,
+                    "page_count": "800",
+                    "language": "en",
+                    "isbn": "QWE34F98UIYO",
+                    "is_feature": true,
+                    "image": "photo.jpg",
+                    "description": "c programming for beginner",
+                    "category_id": 1,
+                    "book_dimensions": "12*12*0.9",
+                    "author_name": "Paul Deteil",
+                    "author_id": 2
+                  },
+                  {
+                    "unit": 99,
+                    "title": "How to program in C",
+                    "status": true,
+                    "shipping_weight": 2,
+                    "publisher_name": "Deitel Inc",
+                    "published_year": "2013",
+                    "price": 12.0,
+                    "page_count": "800",
+                    "language": "en",
+                    "isbn": "QWE34F98UIYO",
+                    "is_feature": true,
+                    "image": "photo.jpg",
+                    "description": "c programming for beginner",
+                    "category_id": 1,
+                    "book_dimensions": "12*12*0.9",
+                    "author_name": "Paul Deteil",
+                    "author_id": 2
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.CartController.showBookInCart",
+        "description": "List all books in cart in the database"
+      }
+    },
+    "/api/v1/carts": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Create cart",
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/CartResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "unit": 6,
+                  "status": 1,
+                  "price": 12.0,
+                  "book_id": 1,
+                  "account_id": 1
+                }
+              }
+            },
+            "description": "cart created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "x-example": {
+              "cart": {
+                "unit": 6,
+                "status": 1,
+                "price": 12.0,
+                "book_id": 1,
+                "account_id": 1
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/CartRequest"
+            },
+            "required": false,
+            "name": "cart",
+            "in": "body",
+            "description": "The cart details"
+          }
+        ],
+        "operationId": "TRexRestPhoenix.CartController.create",
+        "description": "Creates a new cart",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "List all cart",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/CartsResponse"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "unit": 6,
+                    "status": 1,
+                    "price": 12.0,
+                    "book_id": 1,
+                    "account_id": 1
+                  },
+                  {
+                    "unit": 6,
+                    "status": 1,
+                    "price": 12.0,
+                    "book_id": 1,
+                    "account_id": 1
+                  }
+                ]
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "TRexRestPhoenix.CartController.index",
+        "description": "List all cart in the database"
       }
     },
     "/api/v1/books/{id}": {
@@ -1059,6 +1822,154 @@
   },
   "host": "localhost",
   "definitions": {
+    "UserProfilesResponse": {
+      "type": "object",
+      "title": "User profile response",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserProfile"
+          },
+          "description": "The user profile details"
+        }
+      },
+      "description": "Response schema for multiple user profile"
+    },
+    "UserProfileResponse": {
+      "type": "object",
+      "title": "User profile response",
+      "properties": {
+        "data": {
+          "description": "The user profile details",
+          "$ref": "#/definitions/UserProfile"
+        }
+      },
+      "description": "Response schema for single user profile"
+    },
+    "UserProfileRequest": {
+      "type": "object",
+      "title": "User profile Request",
+      "properties": {
+        "userprofile": {
+          "description": "The user profile details",
+          "$ref": "#/definitions/UserProfile"
+        }
+      },
+      "description": "Post body for creating a user profile"
+    },
+    "UserProfile": {
+      "type": "object",
+      "title": "User Profile",
+      "required": [
+        "account_id",
+        "phone",
+        "status",
+        "photo",
+        "address",
+        "lastname",
+        "firstname"
+      ],
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "description": "user status"
+        },
+        "photo": {
+          "type": "string",
+          "description": "user photo"
+        },
+        "phone": {
+          "type": "string",
+          "description": "user phone number"
+        },
+        "lastname": {
+          "type": "string",
+          "description": "user lastname"
+        },
+        "firstname": {
+          "type": "string",
+          "description": "user firstname"
+        },
+        "address": {
+          "type": "string",
+          "description": "user address"
+        },
+        "account_id": {
+          "type": "integer",
+          "description": "user account id"
+        }
+      },
+      "example": {
+        "status": true,
+        "photo": "myphoto.jpg",
+        "phone": "097878789",
+        "lastname": "Kelvin",
+        "firstname": "DK",
+        "address": "Phnom Penh",
+        "account_id": 1
+      },
+      "description": "A user profile"
+    },
+    "CheckoutsResponse": {
+      "type": "object",
+      "title": "Checkouts Response",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Checkout"
+          },
+          "description": "The checkout details"
+        }
+      },
+      "description": "Response schema for multiple checkouts"
+    },
+    "CheckoutResponse": {
+      "type": "object",
+      "title": "Checkout Response",
+      "properties": {
+        "data": {
+          "description": "The checkout details",
+          "$ref": "#/definitions/Checkout"
+        }
+      },
+      "description": "Response schema for single checkout"
+    },
+    "CheckoutRequest": {
+      "type": "object",
+      "title": "Checkout Request",
+      "properties": {
+        "checkout": {
+          "description": "The checkout detaills",
+          "$ref": "#/definitions/Checkout"
+        }
+      },
+      "description": "Post body for creating a checkout"
+    },
+    "Checkout": {
+      "type": "object",
+      "title": "Checkout",
+      "required": [
+        "status",
+        "account_id"
+      ],
+      "properties": {
+        "status": {
+          "type": "integer",
+          "description": "Checkout Status"
+        },
+        "account_id": {
+          "type": "integer",
+          "description": "Account ID"
+        }
+      },
+      "example": {
+        "status": 1,
+        "account_id": 1
+      },
+      "description": "User checkout books"
+    },
     "CategoryResponse": {
       "type": "object",
       "title": "Category Response",
@@ -1122,6 +2033,83 @@
         }
       },
       "description": "Response schema for multiple categories"
+    },
+    "CartsResponse": {
+      "type": "object",
+      "title": "Carts Response",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Cart"
+          },
+          "description": "The carts detail"
+        }
+      },
+      "description": "Response schema for multiple carts"
+    },
+    "CartResponse": {
+      "type": "object",
+      "title": "Cart Response",
+      "properties": {
+        "cart": {
+          "description": "The cart details",
+          "$ref": "#/definitions/Cart"
+        }
+      },
+      "description": "Response schema for single cart"
+    },
+    "CartRequest": {
+      "type": "object",
+      "title": "Cart Request",
+      "properties": {
+        "cart": {
+          "description": "The cart details",
+          "$ref": "#/definitions/Cart"
+        }
+      },
+      "description": "Post body for creating a cart"
+    },
+    "Cart": {
+      "type": "object",
+      "title": "Cart",
+      "required": [
+        "book_id",
+        "account_id",
+        "status",
+        "unit",
+        "price"
+      ],
+      "properties": {
+        "unit": {
+          "type": "integer",
+          "description": "Book unit"
+        },
+        "status": {
+          "type": "integer",
+          "description": "Cart status"
+        },
+        "price": {
+          "type": "float",
+          "description": "Book price"
+        },
+        "book_id": {
+          "type": "integer",
+          "description": "Book ID"
+        },
+        "account_id": {
+          "type": "integer",
+          "description": "Account ID"
+        }
+      },
+      "example": {
+        "unit": 6,
+        "status": 1,
+        "price": 12.0,
+        "book_id": 1,
+        "account_id": 1
+      },
+      "description": "A cart to store books"
     },
     "BooksResponse": {
       "type": "object",

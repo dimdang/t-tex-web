@@ -1,5 +1,6 @@
 {
   "swagger": "2.0",
+  "basePath":":4900",
   "paths": {
     "/api/v1/user_profile/{id}": {
       "put": {
@@ -249,7 +250,7 @@
         ]
       }
     },
-    "/api/v1/login": {
+    "/api/v1/login/": {
       "post": {
         "tags": [
           "Account"

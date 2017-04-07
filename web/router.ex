@@ -15,10 +15,6 @@ defmodule TRexRestPhoenix.Router do
       options "/accounts", AccountController, :options
       options "/accounts/:id", AccountController, :options
 
-      # login route
-      post "/login", AccountController, :login
-      options "/login", AccountController, :options
-
       # catetory route
       resources "/categories", CategoryController
       options "/categories", CategoryController, :options
@@ -76,6 +72,13 @@ defmodule TRexRestPhoenix.Router do
 
   scope "/api/swagger" do
     forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :t_rex_rest_phoenix, swagger_file: "swagger.json"
+  end
+
+  scope "/api/v1", TRexRestPhoenix do
+    # login route
+    post "/login", AccountController, :login
+    options "/login", AccountController, :options
+
   end
 
   def swagger_info do

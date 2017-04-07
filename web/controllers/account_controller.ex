@@ -64,7 +64,7 @@ defmodule TRexRestPhoenix.AccountController do
   end
 
   swagger_path(:login) do
-    post "/api/v1/login/"
+    post "/api/v1/login"
     summary "User login"
     description "User login with email"
     consumes "application/json"

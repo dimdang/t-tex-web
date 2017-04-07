@@ -7,6 +7,11 @@ defmodule TRexRestPhoenix.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :logon do
+    plug CORSPlug, [origin: "*"]
+    plug :accepts, ["json"]
+  end
+
   scope "/api/v1", TRexRestPhoenix do
     pipe_through :api
 
@@ -75,6 +80,7 @@ defmodule TRexRestPhoenix.Router do
   end
 
   scope "/api/v1", TRexRestPhoenix do
+      pipe_through :logon
     # login route
     post "/login", AccountController, :login
     options "/login", AccountController, :options
@@ -90,3 +96,4 @@ defmodule TRexRestPhoenix.Router do
     }
   end
 end
+

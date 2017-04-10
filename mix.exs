@@ -18,8 +18,7 @@ defmodule TRexRestPhoenix.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {TRexRestPhoenix, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin, :stripity_stripe]]
+     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :phoenix_ecto, :postgrex, :comeonin, :stripity_stripe, :bamboo, :bamboo_smtp]]
   end
 
   # Specifies which paths to compile per environment.
@@ -43,9 +42,11 @@ defmodule TRexRestPhoenix.Mixfile do
      {:rummage_ecto, "~> 1.0.0"},
      {:comeonin, "~> 3.0"},
      {:poison, "~> 3.0", override: true},
-     {:stripity_stripe, "~> 1.4.0"},
+     {:stripity_stripe, git: "https://github.com/robconery/stripity-stripe.git"},
      {:uuid, "~> 1.1"},
-     {:phoenix_swagger, "~> 0.5.1"}]
+     {:phoenix_swagger, "~> 0.5.1"},
+     {:bamboo_smtp, "~> 1.2.1"}
+   ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

@@ -444,11 +444,50 @@ defmodule TRexRestPhoenix.BookController do
   def delete(conn, %{"id" => id}) do
     book = Repo.get!(Book, id)
 
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
-    Repo.delete!(book)
+    newBook = %{
+      title: book.title,
+      isbn: book.isbn,
+      price: book.price,
+      unit: book.unit,
+      publisher_name: book.publisher_name,
+      published_year: book.published_year,
+      page_count: book.page_count,
+      language: book.language,
+      shipping_weight: book.shipping_weight,
+      book_dimensions: book.book_dimensions,
+      status: 0,
+      description: book.description,
+      is_feature:  book.is_feature,
+      author_name: book.author_name,
+      image: book.image,
+      category_id: book.category_id,
+      author_id: book.author_id
+    }
 
-    send_resp(conn, :no_content, "")
+    changeset = Book.changeset(book, newBook)
+
+    case Repo.update(changeset) do
+      {:ok, book} ->
+        carts = Repo.all(from cart in Cart, where: cart.book_id == ^id)
+        case carts do
+          nil ->
+            json conn, %{data: %{message: "book has been delete",
+                               status: 200
+                }}
+          _ ->
+            for c <- carts do
+              cart = Repo.get!(Cart, c.id)
+              Repo.delete!(cart)
+            end
+            json conn, %{data: %{message: "book has been delete",
+                               status: 200
+                }}
+        end
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    end
   end
 
   swagger_path(:tmpDelete) do
@@ -487,13 +526,20 @@ defmodule TRexRestPhoenix.BookController do
     case Repo.update(changeset) do
       {:ok, book} ->
         carts = Repo.all(from cart in Cart, where: cart.book_id == ^id)
-        for c <- carts do
-          cart = Repo.get!(Cart, c.id)
-          Repo.delete!(cart)
+        case carts do
+          nil ->
+            json conn, %{data: %{message: "book has been delete",
+                               status: 200
+                }}
+          _ ->
+            for c <- carts do
+              cart = Repo.get!(Cart, c.id)
+              Repo.delete!(cart)
+            end
+            json conn, %{data: %{message: "book has been delete",
+                               status: 200
+                }}
         end
-        json conn, %{data: %{message: "book has been delete",
-                             status: 200
-              }}
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

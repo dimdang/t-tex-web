@@ -45,6 +45,7 @@ defmodule TRexRestPhoenix.Mixfile do
      {:stripity_stripe, git: "https://github.com/robconery/stripity-stripe.git"},
      {:uuid, "~> 1.1"},
      {:phoenix_swagger, "~> 0.5.1"},
+     {:bamboo, "~> 0.7"},
      {:bamboo_smtp, "~> 1.2.1"}
    ]
   end

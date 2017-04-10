@@ -3,6 +3,7 @@ defmodule TRexRestPhoenix.BookController do
 
   alias TRexRestPhoenix.Book
   alias TRexRestPhoenix.Author
+  alias TRexRestPhoenix.Cart
   use PhoenixSwagger
 
   def swagger_definitions do
@@ -483,10 +484,20 @@ defmodule TRexRestPhoenix.BookController do
 
     changeset = Book.changeset(book, newBook)
 
-    Repo.update(changeset)
-
-    json conn, %{data: %{message: "book has been delete",
-                         status: 200
-          }}
+    case Repo.update(changeset) do
+      {:ok, book} ->
+        carts = Repo.all(from cart in Cart, where: cart.book_id == ^id)
+        for c <- carts do
+          cart = Repo.get!(Cart, c.id)
+          Repo.delete!(cart)
+        end
+        json conn, %{data: %{message: "book has been delete",
+                             status: 200
+              }}
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    end
   end
 end

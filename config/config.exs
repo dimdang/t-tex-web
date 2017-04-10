@@ -41,10 +41,10 @@ config :stripity_stripe, secret_key: "sk_test_lJ4PttARweKfby0GMbXkHgDG"
 config :t_rex_rest_phoenix, TRexRestPhoenix.Mailer,
   adapter: Bamboo.SMTPAdapter,
   server: "smtp.gmail.com",
-  port: 587,
+  port: 465,
   username: "2nt.book.store@gmail.com",
   password: "qlimh2o9",
-  tls: :always, # can be `:always` or `:never`
+  tls: :if_available, # can be `:always` or `:never`
   ssl: true, # can be `true`
   retries: 1
 

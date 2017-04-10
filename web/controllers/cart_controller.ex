@@ -3,6 +3,7 @@ defmodule TRexRestPhoenix.CartController do
 
   alias TRexRestPhoenix.Cart
   alias TRexRestPhoenix.Book
+  alias TRexRestPhoenix.Account
   use PhoenixSwagger
 
   def swagger_definitions do
@@ -113,7 +114,7 @@ defmodule TRexRestPhoenix.CartController do
         }
       }
     else
-      cart = Repo.get_by(Cart, book_id: changeset.params["book_id"])
+      cart = Repo.get_by(Cart, book_id: changeset.params["book_id"], account_id: changeset.params["account_id"])
 
       #create new book struct to update
       newBooks = %{
@@ -138,10 +139,11 @@ defmodule TRexRestPhoenix.CartController do
         nil ->
           #update unit in books
           Repo.update(Book.changeset(book, newBooks))
-
           #save book to cart
           case Repo.insert(changeset) do
             {:ok, cart} ->
+              user = Repo.get_by(Account, id: cart.account_id)
+              TRexRestPhoenix.Email.checkout(user.email,book) |> TRexRestPhoenix.Mailer.deliver_later
               conn
               |> put_status(:created)
               |> put_resp_header("location", cart_path(conn, :show, cart))
@@ -154,6 +156,8 @@ defmodule TRexRestPhoenix.CartController do
         # old book in cart
         _ ->
           #update unit in books
+          user = Repo.get_by(Account, id: cart.account_id)
+          TRexRestPhoenix.Email.checkout(user.email,book) |> TRexRestPhoenix.Mailer.deliver_later
           Repo.update(Book.changeset(book, newBooks))
 
           cart_params = %{
@@ -310,16 +314,98 @@ defmodule TRexRestPhoenix.CartController do
 
   def update(conn, %{"id" => id, "cart" => cart_params}) do
     cart = Repo.get!(Cart, id)
-    changeset = Cart.changeset(cart, cart_params)
 
-    case Repo.update(changeset) do
-      {:ok, cart} ->
-        render(conn, "show.json", cart: cart)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+    book = Repo.get_by(Book, id: cart.book_id)
+
+    changeset = Cart.changeset(%Cart{}, cart_params)
+
+    if changeset.params["unit"] > cart.unit do
+
+      if changeset.params["unit"] > book.unit do
+        json conn, %{data: %{
+            message: "not engough book in stock!",
+            unit_left: book.unit,
+            status: 404
+          }}
+        else
+          dif = changeset.params["unit"] - cart.unit
+          unit = book.unit - dif
+          #update unit in books
+          Repo.update(Book.changeset(book, bookTemplate(book,unit)))
+
+          case Repo.update(Cart.changeset(cart,cartTemplate(cart,changeset.params["unit"]))) do
+            {:ok, cart} ->
+              render(conn, "show.json", cart: cart)
+            {:error, changeset} ->
+              conn
+              |> put_status(:unprocessable_entity)
+              |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+          end
+      end
+    else
+      if changeset.params["unit"] > 0 do
+        dif = cart.unit - changeset.params["unit"]
+        unit = book.unit + dif
+        #update unit in books
+        Repo.update(Book.changeset(book, bookTemplate(book,unit)))
+
+        case Repo.update(Cart.changeset(cart,cartTemplate(cart,changeset.params["unit"]))) do
+          {:ok, cart} ->
+            render(conn, "show.json", cart: cart)
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+        end
+      end
+
+      if changeset.params["unit"] === 0 do
+        dif = cart.unit - changeset.params["unit"]
+        unit = book.unit + dif
+        #update unit in books
+        Repo.update(Book.changeset(book, bookTemplate(book,unit)))
+
+        Repo.delete!(cart)
+
+        json conn, %{ data: %{
+                      message: "Remove book from cart success",
+                      status: 200,
+                    }
+                  }
+      end
     end
+  end
+
+  defp cartTemplate(cart, unit) do
+     %{
+      price: cart.price,
+      unit: unit,
+      status: cart.status,
+      account_id: cart.account_id,
+      book_id: cart.book_id
+    }
+  end
+
+  defp bookTemplate(book,unit) do
+    %{
+        title: book.title,
+        isbn: book.isbn,
+        price: book.price,
+        unit: unit,
+        publisher_name: book.publisher_name,
+        published_year: book.published_year,
+        page_count: book.page_count,
+        language: book.language,
+        shipping_weight: book.shipping_weight,
+        image: book.image,
+        description: book.description,
+        author_name: book.author_name,
+        is_feature: book.is_feature,
+        book_dimensions: book.book_dimensions,
+        status: book.status,
+        category_id: book.category_id,
+        author_id: book.author_id
+    }
   end
 
   swagger_path(:delete) do

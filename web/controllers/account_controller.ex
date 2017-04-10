@@ -81,8 +81,6 @@ defmodule TRexRestPhoenix.AccountController do
   # user login
   def login(conn, %{"account" => account_params})do
 
-    TRexRestPhoenix.Email.welcome("helo") |> Mailer.deliver_now
-
     changeset = Account.changeset(%Account{}, account_params)
 
     account = Repo.get_by(Account, email: changeset.params["email"], status: true)
@@ -161,6 +159,8 @@ defmodule TRexRestPhoenix.AccountController do
       nil ->
         data = changeset
         |> put_change(:password, hashpwsalt(changeset.params["password"]))
+
+        TRexRestPhoenix.Email.welcome(changeset.params["email"]) |> TRexRestPhoenix.Mailer.deliver_later
 
         case Repo.insert(data) do
         {:ok, account} ->

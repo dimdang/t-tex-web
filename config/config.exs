@@ -37,6 +37,17 @@ config :rummage_ecto, Rummage.Ecto,
 # Configure stripe
 config :stripity_stripe, secret_key: "sk_test_lJ4PttARweKfby0GMbXkHgDG"
 
+# Mail configuration
+config :t_rex_rest_phoenix, TRexRestPhoenix.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "smtp.gmail.com",
+  port: 587,
+  username: "2nt.book.store@gmail.com",
+  password: "qlimh2o9",
+  tls: :always, # can be `:always` or `:never`
+  ssl: true, # can be `true`
+  retries: 1
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

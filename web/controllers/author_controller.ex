@@ -156,26 +156,19 @@ defmodule TRexRestPhoenix.AuthorController do
                      "description" => decription,
                      "photo" => photo}) do
 
-    if photo.filename === nil do
-      json conn, %{data: %{
-                     status: 404,
-                     message: "please check your image"
-        }}
-    else
-      extension = Path.extname(photo.filename)
-      filename = "#{UUID.uuid1()}#{extension}"
-      File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+    author = Repo.get!(Author, id)
+
+    if photo == "1" do
 
       newAuthor = %{
         firstname: firstname,
         lastname: lastname,
         position: position,
         description: decription,
-        photo: filename,
+        photo: author.photo,
         status: true
       }
 
-      author = Repo.get!(Author, id)
       changeset = Author.changeset(author, newAuthor)
 
       case Repo.update(changeset) do
@@ -185,6 +178,38 @@ defmodule TRexRestPhoenix.AuthorController do
           conn
           |> put_status(:unprocessable_entity)
           |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      end
+
+    else
+      if photo.filename === nil do
+        json conn, %{data: %{
+                       status: 404,
+                       message: "please check your image"
+          }}
+      else
+        extension = Path.extname(photo.filename)
+        filename = "#{UUID.uuid1()}#{extension}"
+        File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+
+        newAuthor = %{
+          firstname: firstname,
+          lastname: lastname,
+          position: position,
+          description: decription,
+          photo: filename,
+          status: true
+        }
+
+        changeset = Author.changeset(author, newAuthor)
+
+        case Repo.update(changeset) do
+          {:ok, author} ->
+            render(conn, "show.json", author: author)
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+        end
       end
     end
   end

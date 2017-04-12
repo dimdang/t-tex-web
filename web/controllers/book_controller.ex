@@ -399,7 +399,7 @@ defmodule TRexRestPhoenix.BookController do
 
     author_param = Repo.get!(Author, author)
 
-    if photo.filename === "1" do
+    if photo == "1" do
 
       newBook = %{
         title: title,
@@ -460,7 +460,7 @@ defmodule TRexRestPhoenix.BookController do
           description: description,
           is_feature:  is_feature,
           author_name: Enum.join([author_param.firstname,author_param.lastname], " "),
-          image: book.image,
+          image: filename,
           category_id: category,
           author_id: author
         }

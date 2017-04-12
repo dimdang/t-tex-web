@@ -395,17 +395,11 @@ defmodule TRexRestPhoenix.BookController do
                      "author_id" => author
                      }) do
 
-    if photo.filename === nil do
-      json conn, %{data: %{
-                     status: 404,
-                     message: "please check your image"
-        }}
-    else
-      extension = Path.extname(photo.filename)
-      filename = "#{UUID.uuid1()}#{extension}"
-      File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+    book = Repo.get!(Book, id)
 
-      author_param = Repo.get!(Author, author)
+    author_param = Repo.get!(Author, author)
+
+    if photo === 1 do
 
       newBook = %{
         title: title,
@@ -422,12 +416,11 @@ defmodule TRexRestPhoenix.BookController do
         description: description,
         is_feature:  is_feature,
         author_name: Enum.join([author_param.firstname,author_param.lastname], " "),
-        image: filename,
+        image: book.image,
         category_id: category,
         author_id: author
       }
 
-      book = Repo.get!(Book, id)
       changeset = Book.changeset(book, newBook)
 
       case Repo.update(changeset) do
@@ -437,6 +430,51 @@ defmodule TRexRestPhoenix.BookController do
           conn
           |> put_status(:unprocessable_entity)
           |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+      end
+
+    else
+
+      if photo.filename === nil do
+        json conn, %{data: %{
+                       status: 404,
+                       message: "please check your image"
+          }}
+      else
+
+        extension = Path.extname(photo.filename)
+        filename = "#{UUID.uuid1()}#{extension}"
+        File.cp(photo.path,  Enum.join(["./uploads/", filename], ""))
+
+        newBook = %{
+          title: title,
+          isbn: isbn,
+          price: price,
+          unit: unit,
+          publisher_name: publisher,
+          published_year: published,
+          page_count: page,
+          language: language,
+          shipping_weight: shipping,
+          book_dimensions: bookDm,
+          status: 1,
+          description: description,
+          is_feature:  is_feature,
+          author_name: Enum.join([author_param.firstname,author_param.lastname], " "),
+          image: book.image,
+          category_id: category,
+          author_id: author
+        }
+
+        changeset = Book.changeset(book, newBook)
+
+        case Repo.update(changeset) do
+          {:ok, book} ->
+            render(conn, "show.json", book: book)
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> render(TRexRestPhoenix.ChangesetView, "error.json", changeset: changeset)
+        end
       end
     end
   end

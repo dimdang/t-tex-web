@@ -399,7 +399,7 @@ defmodule TRexRestPhoenix.BookController do
 
     author_param = Repo.get!(Author, author)
 
-    if photo === 1 do
+    if photo.filename === "1" do
 
       newBook = %{
         title: title,

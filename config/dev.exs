@@ -36,7 +36,7 @@ config :phoenix, :stacktrace_depth, 20
 config :t_rex_rest_phoenix, TRexRestPhoenix.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "kso123",
+  password: "123",
   database: "t_rex_rest_phoenix_dev",
   hostname: "localhost",
   pool_size: 10
